@@ -52,6 +52,7 @@ interface StorageEngine {
   getStats(code: string): Promise<LinkStats | null>;
   getStatsByPublicId(publicId: string): Promise<LinkStats | null>;
   listHistory(limit: number): Promise<HistoryRecord[]>;
+  cleanupExpiredLinks?(): Promise<number>;
 }
 
 const createCode = customAlphabet(
@@ -458,37 +459,45 @@ class SqliteStorage implements StorageEngine {
       expiresAt: row.expires_at,
     }));
   }
+
+  async cleanupExpiredLinks(): Promise<number> {
+    const now = new Date().toISOString();
+    const result = this.db
+      .prepare("DELETE FROM links WHERE expires_at IS NOT NULL AND expires_at <= ?")
+      .run(now);
+    return (result.changes as number) || 0;
+  }
 }
 
 class RedisStorage implements StorageEngine {
-  private redis: Redis;
+  protected redis: Redis;
 
   constructor() {
     this.redis = Redis.fromEnv();
   }
 
-  private linkKey(code: string): string {
+  protected linkKey(code: string): string {
     return `qr:link:${code}`;
   }
 
-  private eventsKey(code: string): string {
+  protected eventsKey(code: string): string {
     return `qr:events:${code}`;
   }
 
-  private publicIdKey(publicId: string): string {
+  protected publicIdKey(publicId: string): string {
     return `qr:public:${publicId}`;
   }
 
-  private publicMetaKey(publicId: string): string {
+  protected publicMetaKey(publicId: string): string {
     return `qr:public-meta:${publicId}`;
   }
 
-  private urlKey(url: string): string {
+  protected urlKey(url: string): string {
     const encoded = Buffer.from(url).toString("base64url");
     return `qr:url:${encoded}`;
   }
 
-  private historyKey(): string {
+  protected historyKey(): string {
     return "qr:history";
   }
 
@@ -684,12 +693,6 @@ class RedisStorage implements StorageEngine {
         expiresAt: record.expiresAt,
       }));
   }
-
-  async cleanupExpiredLinks(): Promise<number> {
-    const now = new Date().toISOString();
-    const result = this.db.prepare("DELETE FROM links WHERE expires_at IS NOT NULL AND expires_at <= ?").run(now);
-    return (result.changes as number) || 0;
-  }
 }
 
 class RedisStorageWithCleanup extends RedisStorage {
@@ -723,10 +726,12 @@ async function cleanupExpiredLinksLazy(): Promise<number> {
   }
 
   cleanupCounter = 0;
-  if (storage instanceof RedisStorageWithCleanup) {
-    return storage.cleanupExpiredLinks();
-  } else if (storage instanceof SqliteStorage) {
-    return storage.cleanupExpiredLinks();
+  try {
+    if (storage.cleanupExpiredLinks) {
+      return await storage.cleanupExpiredLinks();
+    }
+  } catch (err) {
+    console.error("Cleanup error:", err);
   }
 
   return 0;
