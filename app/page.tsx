@@ -28,6 +28,9 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingStats, setIsLoadingStats] = useState(false);
   const [isOtherFunctionsOpen, setIsOtherFunctionsOpen] = useState(false);
+  const [expiryMode, setExpiryMode] = useState<"none" | "date" | "days">("none");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [expiryDays, setExpiryDays] = useState("7");
   const [error, setError] = useState<string | null>(null);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -189,23 +192,23 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main
-        className="mx-auto flex w-full max-w-4xl flex-col items-center gap-8 px-4 pb-16 pt-4 text-center sm:gap-10 sm:px-6 sm:pb-20 sm:pt-8">
+      <main className="mx-auto flex w-full max-w-4xl flex-col items-center gap-8 px-4 pb-16 pt-4 text-center sm:gap-10 sm:px-6 sm:pb-20 sm:pt-8">
         <div className="space-y-4 sm:space-y-6">
           <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
-            <span className="text-primary">Skracaj</span>, licz,{" "}
+            <span className="text-primary">Skracaj</span>, licz, {" "}
             <span className="text-primary">dziel się</span>
           </h1>
           <p className="mx-auto max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-9">
             Shorten long URLs, generate QR codes, and measure clicks and scans from one place.
           </p>
         </div>
-        <div className="flex flex-col items-center w-full">
+
+        <div className="flex w-full flex-col items-center">
           <form
             onSubmit={onSubmit}
             className="flex w-full max-w-3xl flex-col gap-3 rounded-t-3xl border border-slate-200 border-b-0 bg-surface p-3 pb-10 sm:gap-4 sm:rounded-t-4xl sm:border-b sm:p-4 md:rounded-4xl dark:border-slate-700"
           >
-            <div className="w-full flex flex-col items-center gap-3 md:flex-row md:gap-2">
+            <div className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-2">
               <input
                 type="url"
                 required
@@ -220,11 +223,12 @@ export default function HomePage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="mt-2 sm:mt-0 h-12 w-full rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
+                className="mt-2 h-12 w-full rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:mt-0 sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
               >
                 {isLoading ? "Skracam..." : "Skróć link"}
               </button>
             </div>
+
             {error ? (
               <p className="text-left text-sm font-medium text-red-500">
                 {retryAfter
@@ -232,26 +236,108 @@ export default function HomePage() {
                   : error}
               </p>
             ) : null}
+
             <div
               id="content-options"
-              className={isOtherFunctionsOpen ? "mt-3 w-full max-w-3xl rounded-3xl border border-slate-200 bg-surface p-4 text-left dark:border-slate-700" : "hidden"}
+              className={isOtherFunctionsOpen ? "mt-3 flex w-full max-w-3xl flex-col items-center rounded-3xl border border-slate-200 bg-surface p-4 text-center dark:border-slate-700" : "hidden"}
             >
-              hello
-            </div>
-          </form>
-          <div className="grid w-full grid-cols-5">
-            <div className="hidden md:flex justify-end z-2 col-span-2">
-              <div className="bg-surface -mt-px -mr-px w-[50%] h-[50%]">
-                <div className="bg-background rounded-tr-3xl border-r border-slate-200 border-t w-full h-full dark:border-slate-700"></div>
+              <h2 className="mb-4 text-center text-xl font-bold">Więcej funkcji</h2>
+
+              <div
+                className="mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
+                style={{fontFamily: "Roboto, sans-serif"}}
+              >
+                Własny adres URL (min. 5 znaków, max. 30)
+              </div>
+
+              <div className="flex w-full max-w-md items-center justify-center gap-2">
+                <label className="shrink-0 cursor-pointer whitespace-nowrap text-sm font-semibold">
+                  go.itvt.xyz/
+                </label>
+                <input
+                  type="text"
+                  placeholder="wlasny_url"
+                  minLength={5}
+                  maxLength={30}
+                  style={{colorScheme: theme}}
+                  className="min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base outline-none transition focus:border-primary sm:px-6 dark:border-slate-700 dark:bg-slate-900"
+                />
+              </div>
+
+              <div
+                className="mt-4 mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
+                style={{fontFamily: "Roboto, sans-serif"}}
+              >
+                Ograniczenia czasowe
+              </div>
+
+              <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/70 p-3 dark:border-slate-700 dark:bg-slate-900/60">
+                <div className="mb-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setExpiryMode("none")}
+                    className={`rounded-full px-3 py-2 transition ${expiryMode === "none" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
+                  >
+                    Bez limitu
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setExpiryMode("date")}
+                    className={`rounded-full px-3 py-2 transition ${expiryMode === "date" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
+                  >
+                    Data
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setExpiryMode("days")}
+                    className={`rounded-full px-3 py-2 transition ${expiryMode === "days" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
+                  >
+                    Dni
+                  </button>
+                </div>
+
+                {expiryMode === "none" ? null : expiryMode === "date" ? (
+                  <div className="flex w-full items-center justify-center gap-2">
+                    <input
+                      type="date"
+                      value={expiryDate}
+                      onChange={(event) => setExpiryDate(event.target.value)}
+                      style={{colorScheme: theme}}
+                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base outline-none transition focus:border-primary dark:border-slate-700 dark:bg-slate-900"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex w-full items-center justify-center gap-2">
+                    <input
+                      type="number"
+                      min={1}
+                      max={365}
+                      value={expiryDays}
+                      onChange={(event) => setExpiryDays(event.target.value)}
+                      style={{colorScheme: theme}}
+                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base outline-none transition focus:border-primary dark:border-slate-700 dark:bg-slate-900"
+                    />
+                    <span className="shrink-0 text-sm font-medium text-slate-500 dark:text-slate-400">
+                      dni
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
-            <div
-              className="z-1 -mt-px flex h-10 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 w-full col-span-5 md:col-span-1 dark:border-slate-700 dark:bg-slate-900">
+          </form>
+
+          <div className="grid w-full grid-cols-5">
+            <div className="hidden md:flex justify-end z-2 col-span-2">
+              <div className="bg-surface -mt-px -mr-px h-[50%] w-[50%]">
+                <div className="bg-background rounded-tr-3xl border-r border-t border-slate-200 h-full w-full dark:border-slate-700"></div>
+              </div>
+            </div>
+            <div className="z-1 -mt-px flex h-10 w-full col-span-5 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 dark:border-slate-700 dark:bg-slate-900 md:col-span-1">
               <button
                 type="button"
                 onClick={() => setIsOtherFunctionsOpen((current) => !current)}
                 aria-expanded={isOtherFunctionsOpen}
-                className="w-full sm:w-auto h-full text-sm font-semibold flex items-center justify-center gap-1"
+                className="flex h-full w-full items-center justify-center gap-1 text-sm font-semibold sm:w-auto"
               >
                 Inne funkcje
                 <svg
@@ -270,8 +356,8 @@ export default function HomePage() {
               </button>
             </div>
             <div className="hidden md:flex justify-start z-2 col-span-2">
-              <div className="bg-surface -mt-px -ml-px w-[50%] h-[50%]">
-                <div className="bg-background rounded-tl-3xl border-l border-slate-200 border-t w-full h-full dark:border-slate-700"></div>
+              <div className="bg-surface -mt-px -ml-px h-[50%] w-[50%]">
+                <div className="bg-background rounded-tl-3xl border-l border-t border-slate-200 h-full w-full dark:border-slate-700"></div>
               </div>
             </div>
           </div>
@@ -279,8 +365,7 @@ export default function HomePage() {
 
         {result ? (
           <section className="grid w-full max-w-4xl gap-4 md:grid-cols-[1.2fr_1fr]">
-            <div
-              className="rounded-3xl border border-slate-200 bg-surface p-4 text-left sm:p-6 dark:border-slate-700">
+            <div className="rounded-3xl border border-slate-200 bg-surface p-4 text-left sm:p-6 dark:border-slate-700">
               <h2 className="mb-4 text-xl font-bold">Short link</h2>
               <div className="space-y-3 text-sm">
                 <CopyableLinkRow label="Original:" value={result.url} copyLabel="original URL"/>
@@ -307,8 +392,7 @@ export default function HomePage() {
               </button>
             </div>
 
-            <div
-              className="rounded-3xl border border-slate-200 bg-surface p-4 shadow-sm sm:p-6 dark:border-slate-700">
+            <div className="rounded-3xl border border-slate-200 bg-surface p-4 shadow-sm sm:p-6 dark:border-slate-700">
               <h2 className="mb-4 text-xl font-bold">QR code</h2>
               <Image
                 src={`/api/qr/${result.code}`}
@@ -330,8 +414,7 @@ export default function HomePage() {
         ) : null}
 
         {stats && formattedStats ? (
-          <section
-            className="w-full max-w-4xl rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-sm sm:p-6 dark:border-slate-700">
+          <section className="w-full max-w-4xl rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-sm sm:p-6 dark:border-slate-700">
             <h2 className="mb-4 text-xl font-bold">Statistics</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <p>
