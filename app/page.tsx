@@ -271,7 +271,7 @@ export default function HomePage() {
                 Ograniczenia czasowe
               </div>
 
-              <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/70 p-3 dark:border-slate-700 dark:bg-slate-900/60">
+              <div className="flex flex-col justify-center items-center w-full max-w-md rounded-2xl border border-slate-200 bg-white/70 p-3 dark:border-slate-700 dark:bg-slate-900/60">
                 <div className="mb-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold">
                   <button
                     type="button"
@@ -297,7 +297,7 @@ export default function HomePage() {
                 </div>
 
                 {expiryMode === "none" ? null : expiryMode === "date" ? (
-                  <div className="flex w-full items-center justify-center gap-2">
+                  <div className="flex w-70 items-center justify-center gap-2">
                     <input
                       type="date"
                       value={expiryDate}
@@ -307,7 +307,7 @@ export default function HomePage() {
                     />
                   </div>
                 ) : (
-                  <div className="flex w-full items-center justify-center gap-2">
+                  <div className="flex w-40 items-center justify-center gap-2">
                     <input
                       type="number"
                       min={1}
