@@ -27,6 +27,7 @@ export default function HomePage() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingStats, setIsLoadingStats] = useState(false);
+  const [isOtherFunctionsOpen, setIsOtherFunctionsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -126,7 +127,6 @@ export default function HomePage() {
       setResult(nextResult);
       setUrl("");
 
-      // Save to device history
       try {
         const historyItem = {
           publicId: nextResult.publicId,
@@ -228,11 +228,16 @@ export default function HomePage() {
             {error ? (
               <p className="text-left text-sm font-medium text-red-500">
                 {retryAfter
-                  ? `Error: Przekroczono limit. Spróbuj ponownie za ${retryAfter >= 60 ? `${Math.floor(retryAfter / 60)}m` : `${retryAfter}s`}.`
+                  ? `Error: Przekroczono limit. Spróbuj ponownie za ${retryAfter >= 60 ? `${Math.floor((retryAfter ?? 0) / 60)}m` : `${retryAfter}s`}.`
                   : error}
               </p>
             ) : null}
-            <div className="hidden">hello</div>
+            <div
+              id="content-options"
+              className={isOtherFunctionsOpen ? "mt-3 w-full max-w-3xl rounded-3xl border border-slate-200 bg-surface p-4 text-left dark:border-slate-700" : "hidden"}
+            >
+              hello
+            </div>
           </form>
           <div className="grid w-full grid-cols-5">
             <div className="hidden md:flex justify-end z-2 col-span-2">
@@ -242,20 +247,26 @@ export default function HomePage() {
             </div>
             <div
               className="z-1 -mt-px flex h-10 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 w-full col-span-5 md:col-span-1 dark:border-slate-700 dark:bg-slate-900">
-              <button className="w-full sm:w-auto h-full text-sm font-semibold flex items-center justify-center">
-                Inne funkcje <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-4 w-4"
-                aria-hidden="true"
+              <button
+                type="button"
+                onClick={() => setIsOtherFunctionsOpen((current) => !current)}
+                aria-expanded={isOtherFunctionsOpen}
+                className="w-full sm:w-auto h-full text-sm font-semibold flex items-center justify-center gap-1"
               >
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
+                Inne funkcje
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`h-4 w-4 transition-transform ${isOtherFunctionsOpen ? "rotate-90" : "rotate-0"}`}
+                  aria-hidden="true"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
               </button>
             </div>
             <div className="hidden md:flex justify-start z-2 col-span-2">
