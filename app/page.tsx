@@ -12,6 +12,8 @@ type ApiResult = {
   shortUrl: string;
   qrUrl: string;
   statsUrl: string;
+  expiresAt: string | null;
+  stats: StatsResult;
 };
 
 type StatsResult = {
@@ -21,13 +23,41 @@ type StatsResult = {
   lastAccessedAt: string | null;
   totalClicks: number;
   qrScans: number;
+  expiresAt: string | null;
 };
+
+function buildExpiresAt(expiryMode: "none" | "date" | "days", expiryDate: string, expiryDays: string): string | null {
+  if (expiryMode === "none") {
+    return null;
+  }
+
+  if (expiryMode === "date") {
+    if (!expiryDate) {
+      throw new Error("Wybierz datę wygaśnięcia.");
+    }
+
+    const parsed = new Date(`${expiryDate}T23:59:59.999`);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new Error("Wybierz poprawną datę wygaśnięcia.");
+    }
+
+    return parsed.toISOString();
+  }
+
+  const days = Number.parseInt(expiryDays, 10);
+  if (!Number.isFinite(days) || days < 1) {
+    throw new Error("Podaj poprawną liczbę dni ważności.");
+  }
+
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+}
 
 export default function HomePage() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingStats, setIsLoadingStats] = useState(false);
   const [isOtherFunctionsOpen, setIsOtherFunctionsOpen] = useState(false);
+  const [customCode, setCustomCode] = useState("");
   const [expiryMode, setExpiryMode] = useState<"none" | "date" | "days">("none");
   const [expiryDate, setExpiryDate] = useState("");
   const [expiryDays, setExpiryDays] = useState("7");
@@ -75,6 +105,7 @@ export default function HomePage() {
       lastAccessed: stats.lastAccessedAt
         ? new Date(stats.lastAccessedAt).toLocaleString()
         : "Never",
+      expiresAt: stats.expiresAt ? new Date(stats.expiresAt).toLocaleString() : null,
     };
   }, [stats]);
 
@@ -104,13 +135,20 @@ export default function HomePage() {
     setError(null);
     setStats(null);
     setResult(null);
+    setIsOtherFunctionsOpen(false);
     setIsLoading(true);
 
     try {
+      const expiresAt = buildExpiresAt(expiryMode, expiryDate, expiryDays);
+      const trimmedCustomCode = customCode.trim();
       const response = await fetch("/api/shorten", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({url}),
+        body: JSON.stringify({
+          url,
+          customCode: trimmedCustomCode.length > 0 ? trimmedCustomCode : undefined,
+          expiresAt,
+        }),
       });
       const payload = await response.json();
 
@@ -128,8 +166,8 @@ export default function HomePage() {
 
       const nextResult = payload as ApiResult;
       setResult(nextResult);
+      setStats(nextResult.stats);
       setUrl("");
-
       try {
         const historyItem = {
           publicId: nextResult.publicId,
@@ -139,6 +177,7 @@ export default function HomePage() {
           shortUrl: nextResult.shortUrl,
           statsUrl: nextResult.statsUrl,
           qrDownloadUrl: `${nextResult.qrUrl}?format=jpg&download=1`,
+          expiresAt: nextResult.expiresAt,
         };
         const stored = localStorage.getItem("qr-history");
         const history = stored ? JSON.parse(stored) : [];
@@ -147,8 +186,6 @@ export default function HomePage() {
       } catch {
         // Silent fail for localStorage
       }
-
-      await loadStats(nextResult.publicId);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Coś poszło nie tak.");
     } finally {
@@ -260,6 +297,8 @@ export default function HomePage() {
                   minLength={5}
                   maxLength={30}
                   style={{colorScheme: theme}}
+                  value={customCode}
+                  onChange={(event) => setCustomCode(event.target.value)}
                   className="min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base outline-none transition focus:border-primary sm:px-6 dark:border-slate-700 dark:bg-slate-900"
                 />
               </div>
@@ -429,6 +468,11 @@ export default function HomePage() {
               <p>
                 <span className="font-semibold">Last accessed:</span> {formattedStats.lastAccessed}
               </p>
+              {formattedStats.expiresAt ? (
+                <p>
+                  <span className="font-semibold">Expires at:</span> {formattedStats.expiresAt}
+                </p>
+              ) : null}
             </div>
           </section>
         ) : null}

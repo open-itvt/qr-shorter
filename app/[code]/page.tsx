@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
-import { storage } from "@/lib/storage";
+import { isLinkExpired, storage } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -25,7 +25,7 @@ export default async function ShortCodePage({
   const { src } = await searchParams;
   const link = await storage.getByCode(code);
 
-  if (!link) {
+  if (!link || isLinkExpired(link)) {
     notFound();
   }
 

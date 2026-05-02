@@ -22,6 +22,7 @@ export async function GET(
     lastAccessedAt: stats.lastAccessedAt,
     totalClicks: stats.totalClicks,
     qrScans: stats.qrScans,
+    expiresAt: stats.expiresAt,
     shortUrl: `${baseUrl}/${stats.code}`,
     statsUrl: `${baseUrl}/stats/${stats.publicId}`,
     qrUrl: `${baseUrl}/api/qr/${stats.code}`,

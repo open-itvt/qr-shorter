@@ -13,6 +13,7 @@ type LinkRecord = {
   lastAccessedAt: string | null;
   totalClicks: number;
   qrScans: number;
+  expiresAt: string | null;
 };
 
 type LinkEvent = {
@@ -35,10 +36,16 @@ type HistoryRecord = {
   lastAccessedAt: string | null;
   totalClicks: number;
   qrScans: number;
+  expiresAt: string | null;
+};
+
+type CreateShortLinkOptions = {
+  code?: string | null;
+  expiresAt?: string | null;
 };
 
 interface StorageEngine {
-  createShortLink(url: string): Promise<LinkRecord>;
+  createShortLink(url: string, options?: CreateShortLinkOptions): Promise<LinkRecord>;
   getByCode(code: string): Promise<LinkRecord | null>;
   getByPublicId(publicId: string): Promise<LinkRecord | null>;
   recordRedirect(code: string, event: Omit<LinkEvent, "createdAt">): Promise<void>;
@@ -60,6 +67,7 @@ function normalizeRow(row: {
   last_accessed_at: string | null;
   total_clicks: number;
   qr_scans: number;
+  expires_at: string | null;
 }): LinkRecord {
   return {
     code: row.code,
@@ -69,7 +77,54 @@ function normalizeRow(row: {
     lastAccessedAt: row.last_accessed_at,
     totalClicks: Number(row.total_clicks ?? 0),
     qrScans: Number(row.qr_scans ?? 0),
+    expiresAt: row.expires_at,
   };
+}
+
+function normalizeCustomCode(value: string | null | undefined): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  if (!/^[A-Za-z0-9_-]{5,30}$/.test(trimmed)) {
+    throw new Error(
+      "Custom code must be 5-30 characters and can only include letters, numbers, dashes, or underscores.",
+    );
+  }
+
+  return trimmed;
+}
+
+function normalizeExpiresAt(value: string | null | undefined): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error("Invalid expiration date.");
+  }
+
+  return parsed.toISOString();
+}
+
+export function isLinkExpired(link: { expiresAt: string | null }, now = Date.now()): boolean {
+  if (!link.expiresAt) {
+    return false;
+  }
+
+  const expiresAt = new Date(link.expiresAt).getTime();
+  return Number.isFinite(expiresAt) && expiresAt <= now;
 }
 
 class SqliteStorage implements StorageEngine {
@@ -92,7 +147,8 @@ class SqliteStorage implements StorageEngine {
         created_at TEXT NOT NULL,
         last_accessed_at TEXT,
         total_clicks INTEGER NOT NULL DEFAULT 0,
-        qr_scans INTEGER NOT NULL DEFAULT 0
+        qr_scans INTEGER NOT NULL DEFAULT 0,
+        expires_at TEXT
       );
 
       CREATE TABLE IF NOT EXISTS events (
@@ -127,6 +183,11 @@ class SqliteStorage implements StorageEngine {
       this.db.exec("ALTER TABLE links ADD COLUMN public_id TEXT");
     }
 
+    const hasExpiresAt = columns.some((column) => column.name === "expires_at");
+    if (!hasExpiresAt) {
+      this.db.exec("ALTER TABLE links ADD COLUMN expires_at TEXT");
+    }
+
     this.db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_links_public_id ON links (public_id)");
     this.db.exec("CREATE INDEX IF NOT EXISTS idx_links_url ON links (url)");
 
@@ -151,15 +212,18 @@ class SqliteStorage implements StorageEngine {
     `);
   }
 
-  async createShortLink(url: string): Promise<LinkRecord> {
+  async createShortLink(url: string, options: CreateShortLinkOptions = {}): Promise<LinkRecord> {
     const now = new Date().toISOString();
     const publicId = randomUUID();
+    const customCode = normalizeCustomCode(options.code);
+    const expiresAt = normalizeExpiresAt(options.expiresAt);
+    const wantsDedicatedLink = customCode !== null || expiresAt !== null;
 
     const existing = this.db
       .prepare(
-        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans FROM links WHERE url = ? ORDER BY created_at ASC LIMIT 1",
+        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE url = ? AND (expires_at IS NULL OR expires_at > ?) ORDER BY created_at ASC LIMIT 1",
       )
-      .get(url) as
+      .get(url, now) as
       | {
           code: string;
           public_id: string;
@@ -168,23 +232,31 @@ class SqliteStorage implements StorageEngine {
           last_accessed_at: string | null;
           total_clicks: number;
           qr_scans: number;
+          expires_at: string | null;
         }
       | undefined;
 
-    let row = existing;
+    let row = !wantsDedicatedLink ? existing : undefined;
     if (!row) {
+      if (customCode) {
+        const codeExists = this.db.prepare("SELECT code FROM links WHERE code = ?").get(customCode) as { code: string } | undefined;
+        if (codeExists) {
+          throw new Error("This custom code is already in use.");
+        }
+      }
+
       for (let attempt = 0; attempt < 8; attempt++) {
-        const code = createCode();
+        const code = customCode ?? createCode();
         const canonicalPublicId = randomUUID();
         try {
           this.db
             .prepare(
-              "INSERT INTO links (code, public_id, url, created_at, total_clicks, qr_scans) VALUES (?, ?, ?, ?, 0, 0)",
+              "INSERT INTO links (code, public_id, url, created_at, total_clicks, qr_scans, expires_at) VALUES (?, ?, ?, ?, 0, 0, ?)",
             )
-            .run(code, canonicalPublicId, url, now);
+            .run(code, canonicalPublicId, url, now, expiresAt);
           row = this.db
             .prepare(
-              "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans FROM links WHERE code = ?",
+              "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE code = ?",
             )
             .get(code) as {
             code: string;
@@ -194,9 +266,13 @@ class SqliteStorage implements StorageEngine {
             last_accessed_at: string | null;
             total_clicks: number;
             qr_scans: number;
+            expires_at: string | null;
           };
           break;
         } catch {
+          if (customCode) {
+            throw new Error("This custom code is already in use.");
+          }
           continue;
         }
       }
@@ -215,13 +291,14 @@ class SqliteStorage implements StorageEngine {
       ...normalized,
       publicId,
       createdAt: now,
+      expiresAt: normalized.expiresAt,
     };
   }
 
   async getByCode(code: string): Promise<LinkRecord | null> {
     const row = this.db
       .prepare(
-        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans FROM links WHERE code = ?",
+        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE code = ?",
       )
       .get(code) as
       | {
@@ -232,6 +309,7 @@ class SqliteStorage implements StorageEngine {
           last_accessed_at: string | null;
           total_clicks: number;
           qr_scans: number;
+          expires_at: string | null;
         }
       | undefined;
     if (!row) {
@@ -258,7 +336,7 @@ class SqliteStorage implements StorageEngine {
 
     const row = this.db
       .prepare(
-        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans FROM links WHERE public_id = ?",
+        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE public_id = ?",
       )
       .get(publicId) as
       | {
@@ -269,6 +347,7 @@ class SqliteStorage implements StorageEngine {
           last_accessed_at: string | null;
           total_clicks: number;
           qr_scans: number;
+          expires_at: string | null;
         }
       | undefined;
     if (!row) {
@@ -349,7 +428,8 @@ class SqliteStorage implements StorageEngine {
             h.created_at,
             l.last_accessed_at,
             l.total_clicks,
-            l.qr_scans
+            l.qr_scans,
+            l.expires_at
           FROM link_public_ids h
           INNER JOIN links l ON l.code = h.code
           ORDER BY h.created_at DESC
@@ -364,6 +444,7 @@ class SqliteStorage implements StorageEngine {
       last_accessed_at: string | null;
       total_clicks: number;
       qr_scans: number;
+      expires_at: string | null;
     }[];
 
     return rows.map((row) => ({
@@ -374,6 +455,7 @@ class SqliteStorage implements StorageEngine {
       lastAccessedAt: row.last_accessed_at,
       totalClicks: Number(row.total_clicks ?? 0),
       qrScans: Number(row.qr_scans ?? 0),
+      expiresAt: row.expires_at,
     }));
   }
 }
@@ -410,17 +492,38 @@ class RedisStorage implements StorageEngine {
     return "qr:history";
   }
 
-  async createShortLink(url: string): Promise<LinkRecord> {
+  async createShortLink(url: string, options: CreateShortLinkOptions = {}): Promise<LinkRecord> {
     const now = new Date().toISOString();
     const publicId = randomUUID();
+    const customCode = normalizeCustomCode(options.code);
+    const expiresAt = normalizeExpiresAt(options.expiresAt);
+    const wantsDedicatedLink = customCode !== null || expiresAt !== null;
 
-    let code = await this.redis.get<string>(this.urlKey(url));
+    let code = wantsDedicatedLink ? null : await this.redis.get<string>(this.urlKey(url));
+    if (code) {
+      const existingLink = await this.getByCode(code);
+      if (!existingLink || isLinkExpired(existingLink)) {
+        code = null;
+      }
+    }
+
     if (!code) {
+      if (customCode) {
+        const exists = await this.redis.exists(this.linkKey(customCode));
+        if (exists) {
+          throw new Error("This custom code is already in use.");
+        }
+        code = customCode;
+      }
+
       for (let attempt = 0; attempt < 8; attempt++) {
-        const candidate = createCode();
+        const candidate = customCode ?? createCode();
         const key = this.linkKey(candidate);
         const exists = await this.redis.exists(key);
         if (exists) {
+          if (customCode) {
+            throw new Error("This custom code is already in use.");
+          }
           continue;
         }
 
@@ -432,8 +535,11 @@ class RedisStorage implements StorageEngine {
           lastAccessedAt: "",
           totalClicks: "0",
           qrScans: "0",
+          expiresAt: expiresAt ?? "",
         });
-        await this.redis.set(this.urlKey(url), candidate);
+        if (!wantsDedicatedLink) {
+          await this.redis.set(this.urlKey(url), candidate);
+        }
         code = candidate;
         break;
       }
@@ -457,6 +563,7 @@ class RedisStorage implements StorageEngine {
       ...link,
       publicId,
       createdAt: now,
+      expiresAt: link.expiresAt,
     };
   }
 
@@ -480,6 +587,7 @@ class RedisStorage implements StorageEngine {
       lastAccessedAt: row.lastAccessedAt || null,
       totalClicks: Number(row.totalClicks ?? 0),
       qrScans: Number(row.qrScans ?? 0),
+      expiresAt: row.expiresAt || null,
     };
   }
 
@@ -497,6 +605,7 @@ class RedisStorage implements StorageEngine {
       ...link,
       publicId,
       createdAt: createdAt ?? link.createdAt,
+      expiresAt: link.expiresAt,
     };
   }
 
@@ -572,14 +681,61 @@ class RedisStorage implements StorageEngine {
         lastAccessedAt: record.lastAccessedAt,
         totalClicks: record.totalClicks,
         qrScans: record.qrScans,
+        expiresAt: record.expiresAt,
       }));
   }
+
+  async cleanupExpiredLinks(): Promise<number> {
+    const now = new Date().toISOString();
+    const result = this.db.prepare("DELETE FROM links WHERE expires_at IS NOT NULL AND expires_at <= ?").run(now);
+    return (result.changes as number) || 0;
+  }
+}
+
+class RedisStorageWithCleanup extends RedisStorage {
+  async cleanupExpiredLinks(): Promise<number> {
+    const history = await this.redis.lrange<string>(this.historyKey(), 0, 499);
+    let deleted = 0;
+
+    for (const publicId of history) {
+      const link = await this.getByPublicId(publicId);
+      if (link && isLinkExpired(link)) {
+        await this.redis.del(
+          this.linkKey(link.code),
+          this.eventsKey(link.code),
+          this.publicIdKey(publicId),
+          this.publicMetaKey(publicId),
+        );
+        deleted++;
+      }
+    }
+
+    return deleted;
+  }
+}
+
+let cleanupCounter = 0;
+
+async function cleanupExpiredLinksLazy(): Promise<number> {
+  cleanupCounter++;
+  if (cleanupCounter < 50) {
+    return 0;
+  }
+
+  cleanupCounter = 0;
+  if (storage instanceof RedisStorageWithCleanup) {
+    return storage.cleanupExpiredLinks();
+  } else if (storage instanceof SqliteStorage) {
+    return storage.cleanupExpiredLinks();
+  }
+
+  return 0;
 }
 
 const storage: StorageEngine =
   process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? new RedisStorage()
+    ? new RedisStorageWithCleanup()
     : new SqliteStorage();
 
-export { storage };
+export { storage, cleanupExpiredLinksLazy };
 export type { HistoryRecord, LinkRecord, LinkStats };

@@ -19,6 +19,7 @@ export async function GET(request: Request) {
       lastAccessedAt: item.lastAccessedAt,
       totalClicks: item.totalClicks,
       qrScans: item.qrScans,
+      expiresAt: item.expiresAt,
       shortUrl: `${baseUrl}/${item.code}`,
       statsUrl: `${baseUrl}/stats/${item.publicId}`,
       qrDownloadUrl: `${baseUrl}/api/qr/${item.code}?format=jpg&download=1`,

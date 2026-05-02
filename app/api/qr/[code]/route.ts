@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import QRCode from "qrcode";
 import { getBaseUrl } from "@/lib/base-url";
-import { storage } from "@/lib/storage";
+import { isLinkExpired, storage } from "@/lib/storage";
 
 export async function GET(
   request: Request,
@@ -9,7 +9,7 @@ export async function GET(
 ) {
   const { code } = await context.params;
   const link = await storage.getByCode(code);
-  if (!link) {
+  if (!link || isLinkExpired(link)) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
