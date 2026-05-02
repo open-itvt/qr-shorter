@@ -203,24 +203,24 @@ export default function HomePage() {
         <div className="flex flex-col items-center w-full">
           <form
             onSubmit={onSubmit}
-            className="flex w-full max-w-3xl flex-col gap-3 rounded-3xl border border-slate-200 bg-surface p-3 pb-10 sm:gap-4 sm:rounded-4xl sm:p-4 dark:border-slate-700"
+            className="flex w-full max-w-3xl flex-col gap-3 rounded-t-3xl border border-slate-200 border-b-0 bg-surface p-3 pb-10 sm:gap-4 sm:rounded-t-4xl sm:border-b sm:p-4 md:rounded-4xl dark:border-slate-700"
           >
-            <div className="flex flex-col items-center gap-3 md:flex-row md:gap-2">
+            <div className="w-full flex flex-col items-center gap-3 md:flex-row md:gap-2">
               <input
                 type="url"
                 required
-                placeholder="Wklej długi link, aby go skrócić..."
+                placeholder="Wrzuć długi link, aby go skrócić..."
                 autoComplete="url"
                 autoCorrect="off"
                 spellCheck={false}
-                className="min-h-12 min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-5 text-base outline-none transition focus:border-primary sm:min-h-14 sm:px-6 dark:border-slate-700 dark:bg-slate-900"
+                className="w-full min-h-12 min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-5 text-base outline-none transition focus:border-primary sm:min-h-14 sm:px-6 dark:border-slate-700 dark:bg-slate-900"
                 value={url}
                 onChange={(event) => setUrl(event.target.value)}
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="h-12 rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:h-auto sm:px-8 sm:text-lg md:h-14 md:px-6 md:text-base cursor-pointer"
+                className="mt-2 sm:mt-0 h-12 w-full rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
               >
                 {isLoading ? "Skracam..." : "Skróć link"}
               </button>
@@ -235,14 +235,14 @@ export default function HomePage() {
             <div className="hidden">hello</div>
           </form>
           <div className="grid w-full grid-cols-5">
-            <div className="flex justify-end z-2 col-span-2">
+            <div className="hidden md:flex justify-end z-2 col-span-2">
               <div className="bg-surface -mt-px -mr-px w-[50%] h-[50%]">
                 <div className="bg-background rounded-tr-3xl border-r border-slate-200 border-t w-full h-full dark:border-slate-700"></div>
               </div>
             </div>
             <div
-              className="z-1 -mt-px flex h-10 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 dark:border-slate-700 dark:bg-slate-900">
-              <button className="text-sm font-semibold flex items-center">
+              className="z-1 -mt-px flex h-10 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 w-full col-span-5 md:col-span-1 dark:border-slate-700 dark:bg-slate-900">
+              <button className="w-full sm:w-auto h-full text-sm font-semibold flex items-center justify-center">
                 Inne funkcje <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -258,7 +258,7 @@ export default function HomePage() {
               </svg>
               </button>
             </div>
-            <div className="flex justify-start z-2 col-span-2">
+            <div className="hidden md:flex justify-start z-2 col-span-2">
               <div className="bg-surface -mt-px -ml-px w-[50%] h-[50%]">
                 <div className="bg-background rounded-tl-3xl border-l border-slate-200 border-t w-full h-full dark:border-slate-700"></div>
               </div>

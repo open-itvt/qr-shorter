@@ -138,21 +138,21 @@ export default function HistoryPage() {
                   <div className="flex flex-wrap items-center justify-end gap-2 sm:pl-4">
                     <a
                       href={item.statsUrl}
-                      className="rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
+                      className="h-12 flex-none rounded-xl border border-primary/40 bg-primary/10 px-5 text-sm font-semibold text-primary transition hover:bg-primary/20 sm:h-auto sm:px-3 sm:py-2"
                     >
                       Stats
                     </a>
                     <button
                       type="button"
                       onClick={() => copyShortUrl(item.publicId, item.shortUrl)}
-                      className="rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
+                      className="h-12 flex-none rounded-xl border border-primary/40 bg-primary/10 px-5 text-sm font-semibold text-primary transition hover:bg-primary/20 sm:h-auto sm:px-3 sm:py-2"
                     >
                       {copiedPublicId === item.publicId ? "Skopiowano" : "Kopiuj"}
                     </button>
                     <a
                       href={item.qrDownloadUrl}
                       download={`qr-${item.code}.jpg`}
-                      className="rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+                      className="h-12 flex-none rounded-xl bg-primary px-5 text-sm font-semibold text-white transition hover:opacity-90 sm:h-auto sm:px-3 sm:py-2"
                     >
                       Get QR
                     </a>
