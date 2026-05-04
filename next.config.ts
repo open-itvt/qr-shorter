@@ -23,6 +23,33 @@ const nextConfig: NextConfig = {
         },
       ],
     },
+    {
+      source: "/api/:path*",
+      headers: [
+        {
+          key: "X-Robots-Tag",
+          value: "noindex, nofollow, noarchive",
+        },
+      ],
+    },
+    {
+      source: "/stats/:path*",
+      headers: [
+        {
+          key: "X-Robots-Tag",
+          value: "noindex, nofollow, noarchive",
+        },
+      ],
+    },
+    {
+      source: "/redirect/:path*",
+      headers: [
+        {
+          key: "X-Robots-Tag",
+          value: "noindex, nofollow, noarchive",
+        },
+      ],
+    },
   ],
 };
 

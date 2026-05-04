@@ -1,11 +1,34 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getBaseUrl } from "@/lib/base-url";
 import { storage } from "@/lib/storage";
 import SiteHeader from "@/app/components/site-header";
 import CopyableLinkRow from "@/app/components/copyable-link-row";
+import { siteDescription, siteName } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ publicId: string }>;
+}): Promise<Metadata> {
+  const { publicId } = await params;
+  const stats = await storage.getStatsByPublicId(publicId);
+
+  return {
+    title: stats ? `Statystyki ${stats.code} | ${siteName}` : `Statystyki | ${siteName}`,
+    description: siteDescription,
+    robots: {
+      index: false,
+      follow: false,
+    },
+    alternates: {
+      canonical: stats ? `/stats/${stats.publicId}` : "/stats",
+    },
+  };
+}
 
 export default async function StatsDetailsPage({
   params,

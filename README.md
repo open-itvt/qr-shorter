@@ -32,6 +32,13 @@ Generated short URLs and QR destinations use this priority:
 
 Setting `NEXT_PUBLIC_BASE_URL` helps avoid links pointing to temporary preview deployment URLs.
 
+## SEO setup
+
+- Set `NEXT_PUBLIC_BASE_URL` to the canonical production domain so metadata, JSON-LD, robots.txt, and sitemap URLs resolve correctly.
+- The app emits site-wide Schema.org `WebSite` JSON-LD, Open Graph, Twitter Card metadata, and a canonical title template.
+- The following paths are blocked from indexing through metadata and `X-Robots-Tag` headers: `/api/*`, `/stats/*`, and `/redirect/*`.
+- Run `npm run build` after deploying to confirm the generated metadata routes (`/robots.txt` and `/sitemap.xml`) compile cleanly.
+
 ## Run locally
 
 ```bash

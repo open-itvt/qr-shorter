@@ -1,10 +1,57 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { redirect } from "next/navigation";
 import { isLinkExpired, storage } from "@/lib/storage";
+import AutoRedirect from "@/app/components/auto-redirect";
+import { getSeoBaseUrl, siteName } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
+
+async function loadLink(code: string) {
+  const link = await storage.getByCode(code);
+
+  if (!link || isLinkExpired(link)) {
+    notFound();
+  }
+
+  return link;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}): Promise<Metadata> {
+  const { code } = await params;
+  const link = await loadLink(code);
+  const baseUrl = getSeoBaseUrl();
+  const shortUrl = `${baseUrl}/${code}`;
+
+  return {
+    title: `URL Shorter - ${link.url}`,
+    description: "Redirect to other page",
+    robots: {
+      index: false,
+      follow: false,
+    },
+    openGraph: {
+      type: "website",
+      siteName,
+      title: `URL Shorter - ${link.url}`,
+      description: "Redirect to other page",
+      url: shortUrl,
+    },
+    twitter: {
+      card: "summary",
+      title: `URL Shorter - ${link.url}`,
+      description: "Redirect to other page",
+    },
+    alternates: {
+      canonical: shortUrl,
+    },
+  };
+}
 
 function getClientIp(headerStore: Headers): string | null {
   const forwardedFor = headerStore.get("x-forwarded-for");
@@ -39,5 +86,22 @@ export default async function ShortCodePage({
     referer: headerStore.get("referer"),
   });
 
-  redirect(link.url);
+  return (
+    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-4 py-12 text-center">
+      {/* The metadata above is used by crawlers and social previews; browsers redirect immediately. */}
+      <AutoRedirect targetUrl={link.url} />
+
+      <div className="space-y-4 rounded-3xl border border-slate-200 bg-surface p-6 shadow-sm dark:border-slate-700">
+        <h1 className="text-3xl font-extrabold text-primary sm:text-4xl">URL Shorter</h1>
+        <p className="text-base text-muted">Przekierowujemy do docelowej strony.</p>
+        <p className="break-all text-sm text-muted">
+          Jeśli przekierowanie nie nastąpiło automatycznie, otwórz{" "}
+          <a className="text-primary underline" href={link.url}>
+            {link.url}
+          </a>
+          .
+        </p>
+      </div>
+    </main>
+  );
 }
