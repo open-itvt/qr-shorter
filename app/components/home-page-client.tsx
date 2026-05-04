@@ -204,7 +204,11 @@ export default function HomePageClient() {
             <span className="text-primary">dziel się</span>
           </h1>
           <p className="mx-auto max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-9">
-            Shorten long URLs, generate QR codes, and measure clicks and scans from one place.
+            {/* Localized paragraph */}
+            <Localized
+              en="Shorten long URLs, generate QR codes, and measure clicks and scans from one place."
+              pl="Skróć długie adresy URL, generuj kody QR i mierz kliknięcia oraz skany w jednym miejscu."
+            />
           </p>
         </div>
 

@@ -64,13 +64,13 @@ export default async function StatsDetailsPage({
         <div className="rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-sm sm:p-6 dark:border-slate-700">
           <h2 className="mb-4 text-xl font-bold">Przekierowanie</h2>
           <div className="space-y-3 text-sm">
-            <CopyableLinkRow label="Oryginalny URL:" value={stats.url} copyLabel="oryginalny URL" />
             <CopyableLinkRow
               label="Krótki link:"
               value={shortUrl}
               href={shortUrl}
               copyLabel="krótki link"
             />
+             <CopyableLinkRow label="Oryginalny URL:" value={stats.url} copyLabel="oryginalny URL" />
             <p className="break-all">
               <a href={statsUrl} className="text-primary underline" target="_blank" rel="noreferrer">
                 {statsUrl}
