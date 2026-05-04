@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { Viewport } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import "./globals.css";
 import {
   getSeoBaseUrl,
@@ -13,6 +14,7 @@ import {
 import { cookies } from "next/headers";
 
 const baseUrl = getSeoBaseUrl();
+const ga4MeasurementId = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID ?? "G-ZG85H43MBG";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -85,6 +87,16 @@ export default async function RootLayout({
   return (
     <html lang={htmlLang} className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${ga4MeasurementId}');`}
+        </Script>
         {/* Structured data helps Google understand the site as a Website entity. */}
         <script
           type="application/ld+json"
