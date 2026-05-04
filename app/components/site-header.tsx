@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import pl from "@/locales/pl.json";
 
 type SiteHeaderProps = {
   showHistoryLink?: boolean;
@@ -36,6 +37,20 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     } catch {}
   }, [lang]);
 
+  const labels =
+    lang === "pl"
+      ? pl
+      : {
+          openHistory: "Open history",
+          history: "History",
+          historyTitle: "History",
+          switchToEnglish: "Switch to English",
+          switchToPolish: "Switch to Polish",
+          pl: "PL",
+          en: "EN",
+          switchTheme: "Switch theme",
+        };
+
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
@@ -64,17 +79,17 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
                 // reload to ensure single-language rendering across app
                 window.location.reload();
               }}
-              aria-label={lang === "pl" ? "Przełącz na angielski" : "Switch to Polish"}
-              title={lang === "pl" ? "PL" : "EN"}
+              aria-label={lang === "pl" ? labels.switchToEnglish : labels.switchToPolish}
+              title={lang === "pl" ? labels.pl : labels.en}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
-              {lang === "pl" ? "PL" : "EN"}
+              {lang === "pl" ? labels.pl : labels.en}
             </button>
 
             <Link
               href="/history"
-              aria-label={lang === "pl" ? "Otwórz historię" : "Open history"}
-              title={lang === "pl" ? "Historia" : "History"}
+              aria-label={lang === "pl" ? labels.openHistory : labels.openHistory}
+              title={lang === "pl" ? labels.historyTitle : labels.historyTitle}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/35 bg-primary/10 text-primary transition hover:bg-primary/20 dark:border-primary/45"
             >
             <svg
@@ -99,7 +114,7 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
           onClick={toggleTheme}
           className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
         >
-          Switch theme
+          {lang === "pl" ? pl.switchTheme : "Switch theme"}
         </button>
       </div>
     </header>
