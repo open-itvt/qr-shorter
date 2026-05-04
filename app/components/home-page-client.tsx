@@ -227,7 +227,7 @@ export default function HomePageClient() {
               </>
             ) : (
               <>
-                <span className="text-primary">Shorten URLs</span>, generate QR codes, and track link statistics
+                <span className="text-primary">Shorten URLs</span>, generate QR codes, and track links
               </>
             )}
           </h1>
