@@ -54,7 +54,7 @@ export function getSeoBaseUrl(): string {
     }
   }
 
-  return "http://localhost:3000";
+  return "https://go.itvt.xyz";
 }
 
 export function getWebsiteJsonLd(baseUrl: string) {
