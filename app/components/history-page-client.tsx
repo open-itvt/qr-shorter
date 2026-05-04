@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import SiteHeader from "./site-header";
 
 type HistoryItem = {
   publicId: string;
