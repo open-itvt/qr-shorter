@@ -12,7 +12,7 @@
   "stats": {
     "linkDetailsPrefix": "Szczegóły",
     "linkDetailsSuffix": "linku",
-    "subtitle": "Statystyki dla linku",
+    "subtitle": "Statystyki i szczegóły linku",
     "qrCode": "Kod QR",
     "downloadQr": "Pobierz QR (JPG)",
     "statistics": "Statystyki",
@@ -23,8 +23,8 @@
     "never": "Nigdy"
   },
   "copy": {
-    "shortLink": "krótki link",
-    "originalUrl": "oryginalny URL"
+    "shortLink": "Link skrócony",
+    "originalUrl": "Oryginalny URL"
   }
 }
 

@@ -62,7 +62,7 @@ export default async function StatsDetailsPage({
         </h1>
         <p className="mx-auto max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-9">
           <Localized
-            en="Open the link data, QR code and statistics in the same layout as on the homepage."
+            en="Details and statistics"
             pl={pl.stats.subtitle}
           />
         </p>
