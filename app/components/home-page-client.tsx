@@ -221,14 +221,21 @@ export default function HomePageClient() {
       <main className="mx-auto flex w-full max-w-4xl flex-col items-center gap-8 px-4 pb-16 pt-4 text-center sm:gap-10 sm:px-6 sm:pb-20 sm:pt-8">
         <div className="space-y-4 sm:space-y-6">
           <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
-            <span className="text-primary">Skracaj</span>, licz, {" "}
-            <span className="text-primary">dziel się</span>
+            {siteLang === "pl" ? (
+              <>
+                <span className="text-primary">Skracaj linki</span>, generuj kody QR i śledź statystyki
+              </>
+            ) : (
+              <>
+                <span className="text-primary">Shorten URLs</span>, generate QR codes, and track link statistics
+              </>
+            )}
           </h1>
           <p className="mx-auto max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-9">
             {/* Localized paragraph */}
             <Localized
-              en="Shorten long URLs, generate QR codes, and measure clicks and scans from one place."
-              pl={pl.homeDescription}
+              en="Use this URL shortener to create short links, generate QR codes, and measure clicks and scans from one place."
+              pl="Użyj tego skracacza URL, aby tworzyć krótkie linki, generować kody QR i mierzyć kliknięcia oraz skany w jednym miejscu."
             />
           </p>
         </div>
@@ -284,10 +291,12 @@ export default function HomePageClient() {
               aria-labelledby="content-options-heading"
               className={isOtherFunctionsOpen ? "mt-3 flex w-full max-w-3xl flex-col items-center rounded-3xl border border-slate-200 bg-surface p-4 text-center dark:border-slate-700" : "hidden"}
             >
-              <h2 id="content-options-heading" className="mb-4 text-center text-xl font-bold">{siteLang === "pl" ? "Więcej funkcji" : "More functions"}</h2>
+              <h2 id="content-options-heading" className="mb-4 text-center text-xl font-bold">
+                {siteLang === "pl" ? "Więcej opcji skracania linków" : "More URL shortener options"}
+              </h2>
 
               <div className="mb-2 font-sans text-base font-bold tracking-wide text-slate-500 dark:text-slate-400">
-                {siteLang === "pl" ? "Własny adres URL (min. 5 znaków, max. 30)" : "Custom URL (min. 5 chars, max. 30)"}
+                {siteLang === "pl" ? "Własny kod skróconego linku (min. 5 znaków, max. 30)" : "Custom short link code (min. 5 chars, max. 30)"}
               </div>
               <p className="mb-4 max-w-md text-sm text-muted">
                 {siteLang === "pl" ? "Adres musi zaczynać się od http:// lub https://." : "The address should start with http:// or https://."}
@@ -315,7 +324,7 @@ export default function HomePageClient() {
               </div>
 
               <div className="mt-4 mb-2 font-sans text-base font-bold tracking-wide text-slate-500 dark:text-slate-400">
-                {siteLang === "pl" ? "Ograniczenia czasowe" : "Expiry options"}
+                {siteLang === "pl" ? "Opcje wygaśnięcia linku" : "Link expiry options"}
               </div>
               <p className="mb-4 max-w-md text-sm text-muted">
                 {siteLang === "pl"
@@ -425,7 +434,9 @@ export default function HomePageClient() {
         {result ? (
           <section className="grid w-full max-w-4xl gap-4 md:grid-cols-[1.2fr_1fr]">
             <div className="rounded-3xl border border-slate-200 bg-surface p-4 text-left sm:p-6 dark:border-slate-700">
-              <h2 className="mb-4 text-xl font-bold">Short link</h2>
+              <h2 className="mb-4 text-xl font-bold">
+                {siteLang === "pl" ? "Skrócony link" : "Short link"}
+              </h2>
               <div className="space-y-3 text-sm">
                 <CopyableLinkRow
                   label="Short:"
@@ -468,7 +479,9 @@ export default function HomePageClient() {
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-surface p-4 shadow-sm sm:p-6 dark:border-slate-700">
-              <h2 className="mb-4 text-xl font-bold">QR code</h2>
+              <h2 className="mb-4 text-xl font-bold">
+                {siteLang === "pl" ? "Kod QR dla skróconego linku" : "QR code for the short link"}
+              </h2>
               <Image
                 src={`/api/qr/${result.code}`}
                 alt={`QR code for ${result.shortUrl}`}
@@ -490,7 +503,9 @@ export default function HomePageClient() {
 
         {stats && formattedStats ? (
           <section className="w-full max-w-4xl rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-sm sm:p-6 dark:border-slate-700">
-            <h2 className="mb-4 text-xl font-bold">Statistics</h2>
+            <h2 className="mb-4 text-xl font-bold">
+              {siteLang === "pl" ? "Statystyki skróconego linku" : "Short link statistics"}
+            </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <p>
                 <span className="font-semibold">Total redirects:</span> {stats.totalClicks}
