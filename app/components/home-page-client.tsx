@@ -65,6 +65,7 @@ export default function HomePageClient() {
   const [expiryDate, setExpiryDate] = useState("");
   const [expiryDays, setExpiryDays] = useState("7");
   const [error, setError] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string>("");
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
@@ -124,6 +125,7 @@ export default function HomePageClient() {
 
   const loadStats = async (publicId: string) => {
     setIsLoadingStats(true);
+    setStatusMessage(siteLang === "pl" ? "Odświeżam statystyki." : "Refreshing statistics.");
     try {
       const response = await fetch(`/api/public-stats/${publicId}`, {cache: "no-store"});
       if (!response.ok) {
@@ -131,8 +133,11 @@ export default function HomePageClient() {
       }
       const payload = (await response.json()) as StatsResult;
       setStats(payload);
+      setStatusMessage(siteLang === "pl" ? "Statystyki zostały odświeżone." : "Statistics refreshed.");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to fetch statistics.");
+      const message = err instanceof Error ? err.message : "Unable to fetch statistics.";
+      setError(message);
+      setStatusMessage(siteLang === "pl" ? "Nie udało się odświeżyć statystyk." : "Could not refresh statistics.");
     } finally {
       setIsLoadingStats(false);
     }
@@ -141,6 +146,7 @@ export default function HomePageClient() {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    setStatusMessage(siteLang === "pl" ? "Skracam link." : "Shortening link.");
     setStats(null);
     setResult(null);
     setIsOtherFunctionsOpen(false);
@@ -163,6 +169,7 @@ export default function HomePageClient() {
       if (response.status === 429) {
         const message = payload.error || "Przekroczono limit. Spróbuj ponownie za chwilę.";
         setError(message);
+        setStatusMessage(siteLang === "pl" ? "Przekroczono limit zapytań." : "Rate limit exceeded.");
         setRetryAfter(payload.retryAfter || 30);
         setIsLoading(false);
         return;
@@ -175,6 +182,7 @@ export default function HomePageClient() {
       const nextResult = payload as ApiResult;
       setResult(nextResult);
       setStats(nextResult.stats);
+      setStatusMessage(siteLang === "pl" ? "Link został skrócony." : "Link shortened successfully.");
       setUrl("");
       try {
         const historyItem = {
@@ -195,7 +203,9 @@ export default function HomePageClient() {
         // Silent fail for localStorage
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Coś poszło nie tak.");
+      const message = err instanceof Error ? err.message : "Coś poszło nie tak.";
+      setError(message);
+      setStatusMessage(siteLang === "pl" ? "Nie udało się skrócić linku." : "Could not shorten the link.");
     } finally {
       setIsLoading(false);
     }
@@ -222,9 +232,8 @@ export default function HomePageClient() {
         </div>
 
         <div className="flex w-full flex-col items-center">
-          {/* ARIA live region for dynamic status messages (errors, success, copy) */}
           <div aria-live="polite" aria-atomic="true" className="sr-only" id="site-announcer">
-            {/* content updated programmatically via error/result state */}
+            {statusMessage}
           </div>
           <form
             onSubmit={onSubmit}
@@ -259,7 +268,7 @@ export default function HomePageClient() {
             </div>
 
             {error ? (
-              <p id="shorten-error" className="text-left text-sm font-medium text-red-500">
+              <p id="shorten-error" role="alert" className="text-left text-sm font-medium text-red-500">
                 {retryAfter
                   ? siteLang === "pl"
                     ? `Przekroczono limit. Spróbuj ponownie za ${retryAfter >= 60 ? `${Math.floor((retryAfter ?? 0) / 60)}m` : `${retryAfter}s`}.`
@@ -275,12 +284,12 @@ export default function HomePageClient() {
             >
               <h2 id="content-options-heading" className="mb-4 text-center text-xl font-bold">{siteLang === "pl" ? "Więcej funkcji" : "More functions"}</h2>
 
-              <div
-                className="mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
-                style={{fontFamily: "Roboto, sans-serif"}}
-              >
+              <div className="mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400" style={{fontFamily: "Roboto, sans-serif"}}>
                 {siteLang === "pl" ? "Własny adres URL (min. 5 znaków, max. 30)" : "Custom URL (min. 5 chars, max. 30)"}
               </div>
+              <p className="mb-4 max-w-md text-sm text-muted">
+                {siteLang === "pl" ? "Adres musi zaczynać się od http:// lub https://." : "The address should start with http:// or https://."}
+              </p>
 
               <div className="flex w-full max-w-md items-center justify-center gap-2">
                 <label htmlFor="custom-code" className="shrink-0 cursor-pointer whitespace-nowrap text-sm font-semibold">
@@ -304,12 +313,14 @@ export default function HomePageClient() {
                 <div id="custom-code-help" className="sr-only">{siteLang === "pl" ? "Min 5, max 30 znaków" : "Min 5, max 30 chars"}</div>
               </div>
 
-              <div
-                className="mt-4 mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
-                style={{fontFamily: "Roboto, sans-serif"}}
-              >
+              <div className="mt-4 mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400" style={{fontFamily: "Roboto, sans-serif"}}>
                 {siteLang === "pl" ? "Ograniczenia czasowe" : "Expiry options"}
               </div>
+              <p className="mb-4 max-w-md text-sm text-muted">
+                {siteLang === "pl"
+                  ? "Data kończy ważność o 23:59 czasu przeglądarki. Liczba dni liczona jest od momentu utworzenia linku."
+                  : "Date expiry ends at 23:59 in your browser timezone. Days are counted from link creation."}
+              </p>
 
               <div className="flex flex-col justify-center items-center w-full max-w-md rounded-2xl border border-slate-200 bg-white/70 p-3 dark:border-slate-700 dark:bg-slate-900/60">
                 <div className="mb-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold">
@@ -422,13 +433,29 @@ export default function HomePageClient() {
                   value={result.shortUrl}
                   href={result.shortUrl}
                   copyLabel="short link"
+                  copyText={siteLang === "pl" ? "Kopiuj" : "Copy"}
+                  copiedText={siteLang === "pl" ? "Skopiowano" : "Copied"}
+                  copySuccessMessage={siteLang === "pl" ? "Link skrócony został skopiowany do schowka." : "Short link copied to clipboard."}
+                  copyErrorMessage={siteLang === "pl" ? "Nie udało się skopiować linku." : "Could not copy the link."}
                 />
-                <CopyableLinkRow label="Original:" value={result.url} copyLabel="original URL" />
                 <CopyableLinkRow
-                  label="Stats (do not share public):"
+                  label={siteLang === "pl" ? "Oryginalny adres:" : "Original URL:"}
+                  value={result.url}
+                  copyLabel={siteLang === "pl" ? "oryginalny adres" : "original URL"}
+                  copyText={siteLang === "pl" ? "Kopiuj" : "Copy"}
+                  copiedText={siteLang === "pl" ? "Skopiowano" : "Copied"}
+                  copySuccessMessage={siteLang === "pl" ? "Oryginalny adres skopiowany do schowka." : "Original URL copied to clipboard."}
+                  copyErrorMessage={siteLang === "pl" ? "Nie udało się skopiować adresu." : "Could not copy the URL."}
+                />
+                <CopyableLinkRow
+                  label={siteLang === "pl" ? "Statystyki (nie udostępniaj publicznie):" : "Statistics (do not share publicly):"}
                   value={result.statsUrl}
                   href={result.statsUrl}
-                  copyLabel="stats URL"
+                  copyLabel={siteLang === "pl" ? "adres statystyk" : "stats URL"}
+                  copyText={siteLang === "pl" ? "Kopiuj" : "Copy"}
+                  copiedText={siteLang === "pl" ? "Skopiowano" : "Copied"}
+                  copySuccessMessage={siteLang === "pl" ? "Adres statystyk skopiowany do schowka." : "Stats URL copied to clipboard."}
+                  copyErrorMessage={siteLang === "pl" ? "Nie udało się skopiować adresu statystyk." : "Could not copy the stats URL."}
                 />
               </div>
               <button

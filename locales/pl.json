@@ -24,7 +24,24 @@
   },
   "copy": {
     "shortLink": "Link skrócony",
-    "originalUrl": "Oryginalny URL"
+    "originalUrl": "Oryginalny URL",
+    "statsUrl": "Adres statystyk",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano",
+    "copySuccess": "Link skopiowany do schowka.",
+    "copyError": "Nie udało się skopiować linku."
+  },
+  "home": {
+    "urlHelper": "Wklej pełny adres zaczynający się od http:// lub https://.",
+    "expiryHelper": "Wygaśnięcie ustawia limit ważności linku."
+  },
+  "redirect": {
+    "title": "Przekierowanie",
+    "description": "Za chwilę nastąpi przekierowanie do docelowej strony.",
+    "fallback": "Jeśli przekierowanie nie nastąpi automatycznie, użyj linku poniżej.",
+    "proceed": "Przejdź teraz",
+    "stay": "Zostań na tej stronie",
+    "countdown": "Przekierowanie nastąpi za {seconds} s."
   }
 }
 

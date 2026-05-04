@@ -5,9 +5,20 @@ import { useState } from "react";
 type CopyLinkButtonProps = {
   value: string;
   label: string;
+  copyText: string;
+  copiedText: string;
+  copySuccessMessage: string;
+  copyErrorMessage: string;
 };
 
-export default function CopyLinkButton({ value, label }: CopyLinkButtonProps) {
+export default function CopyLinkButton({
+  value,
+  label,
+  copyText,
+  copiedText,
+  copySuccessMessage,
+  copyErrorMessage,
+}: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false);
   const [announce, setAnnounce] = useState<string | null>(null);
 
@@ -15,12 +26,12 @@ export default function CopyLinkButton({ value, label }: CopyLinkButtonProps) {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
-      setAnnounce(`${label} copied`);
+      setAnnounce(copySuccessMessage);
       window.setTimeout(() => setCopied(false), 1500);
       window.setTimeout(() => setAnnounce(null), 1500);
     } catch {
       setCopied(false);
-      setAnnounce(`Failed to copy ${label}`);
+      setAnnounce(copyErrorMessage);
       window.setTimeout(() => setAnnounce(null), 1500);
     }
   };
@@ -30,8 +41,8 @@ export default function CopyLinkButton({ value, label }: CopyLinkButtonProps) {
       <button
         type="button"
         onClick={copyToClipboard}
-        aria-label={`${label} - copy`}
-        title={copied ? "Skopiowano" : `Skopiuj ${label}`}
+        aria-label={copied ? `${copiedText}: ${label}` : `${copyText}: ${label}`}
+        title={copied ? `${copiedText}: ${label}` : `${copyText}: ${label}`}
         className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 text-sm font-semibold text-primary transition hover:bg-primary/20 dark:border-primary/45"
       >
       <svg
@@ -47,7 +58,7 @@ export default function CopyLinkButton({ value, label }: CopyLinkButtonProps) {
         <rect x="9" y="9" width="13" height="13" rx="2" />
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </svg>
-        <span>{copied ? "Skopiowano" : "Copy"}</span>
+        <span>{copied ? copiedText : copyText}</span>
       </button>
       <div role="status" aria-live="polite" className="sr-only">
         {announce}

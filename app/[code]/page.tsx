@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { isLinkExpired, storage } from "@/lib/storage";
 import AutoRedirect from "@/app/components/auto-redirect";
@@ -71,6 +71,9 @@ export default async function ShortCodePage({
   const { code } = await params;
   const { src } = await searchParams;
   const link = await storage.getByCode(code);
+  const cookieStore = await cookies();
+  const langCookie = cookieStore.get("site-language")?.value;
+  const lang = langCookie === "pl" ? "pl" : "en";
 
   if (!link || isLinkExpired(link)) {
     notFound();
@@ -89,13 +92,15 @@ export default async function ShortCodePage({
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-4 py-12 text-center">
       {/* The metadata above is used by crawlers and social previews; browsers redirect immediately. */}
-      <AutoRedirect targetUrl={link.url} />
+      <AutoRedirect targetUrl={link.url} lang={lang} />
 
       <div className="space-y-4 rounded-3xl border border-slate-200 bg-surface p-6 shadow-sm dark:border-slate-700">
         <h1 className="text-3xl font-extrabold text-primary sm:text-4xl">URL Shorter</h1>
-        <p className="text-base text-muted">Przekierowujemy do docelowej strony.</p>
+        <p className="text-base text-muted">{lang === "pl" ? "Przekierowujemy do docelowej strony." : "Redirecting you to the target page."}</p>
         <p className="break-all text-sm text-muted">
-          Jeśli przekierowanie nie nastąpiło automatycznie, otwórz{" "}
+          {lang === "pl"
+            ? "Jeśli przekierowanie nie nastąpi automatycznie, otwórz"
+            : "If the redirect does not happen automatically, open"}{" "}
           <a className="text-primary underline" href={link.url}>
             {link.url}
           </a>
