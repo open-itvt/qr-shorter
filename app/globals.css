@@ -25,6 +25,47 @@
   --primary: #45c38d;
 }
 
+html[data-contrast="high"]:not(.dark) {
+  --background: #ffffff;
+  --surface: #f8fafc;
+  --foreground: #020617;
+  --muted: #1e293b;
+  --primary: #0f766e;
+}
+
+html.dark[data-contrast="high"] {
+  --background: #000000;
+  --surface: #111827;
+  --foreground: #ffffff;
+  --muted: #e5e7eb;
+  --primary: #34d399;
+}
+
+html[data-contrast="extra"]:not(.dark) {
+  --background: #ffffff;
+  --surface: #f1f5f9;
+  --foreground: #000000;
+  --muted: #111827;
+  --primary: #0f172a;
+}
+
+html.dark[data-contrast="extra"] {
+  --background: #000000;
+  --surface: #0b1120;
+  --foreground: #ffffff;
+  --muted: #f8fafc;
+  --primary: #facc15;
+}
+
+html[data-font="readable"] body {
+  font-family: Verdana, Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+html[data-font="serif"] body {
+  font-family: Georgia, Cambria, "Times New Roman", serif;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
