@@ -46,7 +46,6 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
       ? pl
       : {
           openHistory: "Open history",
-          history: "History",
           historyTitle: "History",
           switchToEnglish: "Switch to English",
           switchToPolish: "Switch to Polish",
@@ -95,8 +94,8 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
 
             <Link
               href="/history"
-              aria-label={lang === "pl" ? labels.openHistory : labels.openHistory}
-              title={lang === "pl" ? labels.historyTitle : labels.historyTitle}
+              aria-label={labels.openHistory}
+              title={labels.historyTitle}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/35 bg-primary/10 text-primary transition hover:bg-primary/20 dark:border-primary/45"
             >
             <svg

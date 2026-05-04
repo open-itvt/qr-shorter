@@ -18,10 +18,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { publicId } = await params;
   const stats = await storage.getStatsByPublicId(publicId);
+  const cookieStore = await cookies();
+  const langCookie = cookieStore.get("site-language")?.value;
+  const lang = langCookie === "pl" ? "pl" : "en";
 
   return {
-    title: stats ? `Statystyki ${stats.code} | ${siteName}` : `Statystyki | ${siteName}`,
-    description: siteDescription,
+    title: stats
+      ? lang === "pl"
+        ? `Statystyki ${stats.code} | ${siteName}`
+        : `Statistics ${stats.code} | ${siteName}`
+      : lang === "pl"
+        ? `Statystyki | ${siteName}`
+        : `Statistics | ${siteName}`,
+    description: lang === "pl" ? pl.stats.subtitle : "Details and statistics for this short link.",
     robots: {
       index: false,
       follow: false,
