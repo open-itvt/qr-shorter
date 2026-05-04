@@ -43,7 +43,7 @@ export default function CopyLinkButton({
         onClick={copyToClipboard}
         aria-label={copied ? `${copiedText}: ${label}` : `${copyText}: ${label}`}
         title={copied ? `${copiedText}: ${label}` : `${copyText}: ${label}`}
-        className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 text-sm font-semibold text-primary transition hover:bg-primary/20 dark:border-primary/45"
+        className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 text-sm font-semibold text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-primary/20 dark:border-primary/45"
       >
       <svg
         viewBox="0 0 24 24"

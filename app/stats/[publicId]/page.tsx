@@ -7,7 +7,7 @@ import { storage } from "@/lib/storage";
 import SiteHeader from "@/app/components/site-header";
 import LocalizedCopyableLinkRow from "@/app/components/localized-copyable-link-row";
 import pl from "@/locales/pl.json";
-import { siteDescription, siteName } from "@/lib/seo";
+import { siteName } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +66,16 @@ export default async function StatsDetailsPage({
   const copySuccessOriginal = lang === "pl" ? "Oryginalny adres skopiowany do schowka." : "Original URL copied to clipboard.";
   const copySuccessStats = lang === "pl" ? "Adres statystyk skopiowany do schowka." : "Stats URL copied to clipboard.";
   const copyError = lang === "pl" ? "Nie udało się skopiować linku." : "Could not copy the link.";
+  const statsItems = [
+    { label: lang === "pl" ? pl.stats.redirects : "Redirects", value: stats.totalClicks },
+    { label: lang === "pl" ? pl.stats.qrScans : "QR scans", value: stats.qrScans },
+    { label: lang === "pl" ? pl.stats.created : "Created", value: new Date(stats.createdAt).toLocaleString() },
+    {
+      label: lang === "pl" ? pl.stats.lastAccessed : "Last accessed",
+      value: stats.lastAccessedAt ? new Date(stats.lastAccessedAt).toLocaleString() : lang === "pl" ? pl.stats.never : "Never",
+    },
+    { label: lang === "pl" ? "Kod" : "Code", value: stats.code },
+  ];
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-6 px-4 py-8 sm:px-6">
@@ -148,7 +158,7 @@ export default async function StatsDetailsPage({
           <a
             href={qrDownloadUrl}
             download={`qr-${stats.code}.jpg`}
-            className="mt-4 inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+            className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:opacity-90"
           >
             {lang === "pl" ? pl.stats.downloadQr : "Download QR (JPG)"}
           </a>
@@ -159,35 +169,14 @@ export default async function StatsDetailsPage({
         <h2 className="mb-4 text-xl font-bold">
           {lang === "pl" ? pl.stats.statistics : "Statistics"}
         </h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <p>
-            <span className="font-semibold">
-              {lang === "pl" ? pl.stats.redirects : "Redirects:"}
-            </span>{" "}
-            {stats.totalClicks}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {lang === "pl" ? pl.stats.qrScans : "QR scans:"}
-            </span>{" "}
-            {stats.qrScans}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {lang === "pl" ? pl.stats.created : "Created:"}
-            </span>{" "}
-            {new Date(stats.createdAt).toLocaleString()}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {lang === "pl" ? pl.stats.lastAccessed : "Last accessed:"}
-            </span>{" "}
-            {stats.lastAccessedAt ? new Date(stats.lastAccessedAt).toLocaleString() : lang === "pl" ? pl.stats.never : "Never"}
-          </p>
-          <p>
-            <span className="font-semibold">{lang === "pl" ? "Kod:" : "Code:"}</span> {stats.code}
-          </p>
-        </div>
+        <dl className="grid gap-4 sm:grid-cols-2">
+          {statsItems.map((item) => (
+            <div key={item.label} className="rounded-2xl border border-slate-200 bg-background/60 p-4 dark:border-slate-700">
+              <dt className="text-sm font-semibold text-muted">{item.label}</dt>
+              <dd className="mt-1 text-base font-semibold text-foreground">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
     </main>
   );

@@ -254,14 +254,14 @@ export default function HomePageClient() {
                 autoComplete="url"
                 autoCorrect="off"
                 spellCheck={false}
-                className="w-full min-h-12 min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-5 text-base outline-none transition focus:border-primary sm:min-h-14 sm:px-6 dark:border-slate-700 dark:bg-slate-900"
+                className="w-full min-h-12 min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-5 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-14 sm:px-6 dark:border-slate-700 dark:bg-slate-900"
                 value={url}
                 onChange={(event) => setUrl(event.target.value)}
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="mt-2 h-12 w-full rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:mt-0 sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
+                className="mt-2 h-12 w-full rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:mt-0 sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
               >
                 {isLoading ? (siteLang === "pl" ? "Skracam..." : "Shortening...") : (siteLang === "pl" ? "Skróć link" : "Shorten")}
               </button>
@@ -308,7 +308,7 @@ export default function HomePageClient() {
                   style={{colorScheme: theme}}
                   value={customCode}
                   onChange={(event) => setCustomCode(event.target.value)}
-                  className="min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base outline-none transition focus:border-primary sm:px-6 dark:border-slate-700 dark:bg-slate-900"
+                  className="min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-6 dark:border-slate-700 dark:bg-slate-900"
                 />
                 <div id="custom-code-help" className="sr-only">{siteLang === "pl" ? "Min 5, max 30 znaków" : "Min 5, max 30 chars"}</div>
               </div>
@@ -327,21 +327,21 @@ export default function HomePageClient() {
                   <button
                     type="button"
                     onClick={() => setExpiryMode("none")}
-                    className={`rounded-full px-3 py-2 transition ${expiryMode === "none" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
+                    className={`inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${expiryMode === "none" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
                   >
                     {siteLang === "pl" ? "Bez limitu" : "None"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setExpiryMode("date")}
-                    className={`rounded-full px-3 py-2 transition ${expiryMode === "date" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
+                    className={`inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${expiryMode === "date" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
                   >
                     {siteLang === "pl" ? "Data" : "Date"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setExpiryMode("days")}
-                    className={`rounded-full px-3 py-2 transition ${expiryMode === "days" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
+                    className={`inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${expiryMode === "days" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
                   >
                     {siteLang === "pl" ? "Dni" : "Days"}
                   </button>
@@ -358,7 +358,7 @@ export default function HomePageClient() {
                       value={expiryDate}
                       onChange={(event) => setExpiryDate(event.target.value)}
                       style={{colorScheme: theme}}
-                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base outline-none transition focus:border-primary dark:border-slate-700 dark:bg-slate-900"
+                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900"
                     />
                   </div>
                 ) : (
@@ -375,7 +375,7 @@ export default function HomePageClient() {
                       onChange={(event) => setExpiryDays(event.target.value)}
                       aria-describedby={"expiry-days-help"}
                       style={{colorScheme: theme}}
-                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base outline-none transition focus:border-primary dark:border-slate-700 dark:bg-slate-900"
+                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900"
                     />
                     <span id="expiry-days-help" className="shrink-0 text-sm font-medium text-slate-500 dark:text-slate-400">
                       {siteLang === "pl" ? "dni" : "days"}
@@ -392,12 +392,12 @@ export default function HomePageClient() {
                 <div className="bg-background rounded-tr-3xl border-r border-t border-slate-200 h-full w-full dark:border-slate-700"></div>
               </div>
             </div>
-            <div className="z-1 -mt-px flex h-10 w-full col-span-5 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 dark:border-slate-700 dark:bg-slate-900 md:col-span-1">
+            <div className="z-1 -mt-px flex min-h-11 w-full col-span-5 items-center justify-center rounded-b-3xl border border-t-0 border-slate-200 bg-white px-6 dark:border-slate-700 dark:bg-slate-900 md:col-span-1">
               <button
                 type="button"
                 onClick={() => setIsOtherFunctionsOpen((current) => !current)}
                 aria-expanded={isOtherFunctionsOpen}
-                className="flex h-full w-full items-center justify-center gap-1 text-sm font-semibold sm:w-auto"
+                className="flex min-h-11 w-full items-center justify-center gap-1 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto"
               >
                 Inne funkcje
                 <svg
@@ -462,7 +462,7 @@ export default function HomePageClient() {
                 type="button"
                 onClick={() => loadStats(result.publicId)}
                 disabled={isLoadingStats}
-                className="mt-6 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold transition hover:bg-slate-100 disabled:opacity-70 dark:border-slate-600 dark:hover:bg-slate-800"
+                className="mt-6 min-h-11 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-100 disabled:opacity-70 dark:border-slate-600 dark:hover:bg-slate-800"
               >
                 {isLoadingStats ? "Refreshing..." : "Refresh stats"}
               </button>
@@ -481,7 +481,7 @@ export default function HomePageClient() {
               <a
                 href={`/api/qr/${result.code}?format=jpg&download=1`}
                 download={`qr-${result.code}.jpg`}
-                className="mt-4 inline-flex rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold transition hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800"
+                className="mt-4 inline-flex min-h-11 items-center rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800"
               >
                 Download QR (JPG)
               </a>

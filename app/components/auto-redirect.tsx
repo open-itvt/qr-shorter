@@ -62,14 +62,14 @@ export default function AutoRedirect({ targetUrl, delaySeconds = 5, lang = "en" 
                 window.location.replace(targetUrl);
               } catch {}
             }}
-            className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white"
+            className="min-h-11 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {copy.proceed}
           </button>
           <button
             type="button"
             onClick={() => setCancelled(true)}
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold"
+            className="min-h-11 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {copy.stay}
           </button>
