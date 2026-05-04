@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import CopyableLinkRow from "@/app/components/copyable-link-row";
 import SiteHeader from "@/app/components/site-header";
+import Localized from "@/app/components/Localized";
+import pl from "@/locales/pl.json";
 
 type ApiResult = {
   code: string;
@@ -207,7 +209,7 @@ export default function HomePageClient() {
             {/* Localized paragraph */}
             <Localized
               en="Shorten long URLs, generate QR codes, and measure clicks and scans from one place."
-              pl="Skróć długie adresy URL, generuj kody QR i mierz kliknięcia oraz skany w jednym miejscu."
+              pl={pl.homeDescription}
             />
           </p>
         </div>

@@ -7,4 +7,24 @@
   "pl": "PL",
   "en": "EN",
   "switchTheme": "Zmień motyw"
+  ,
+  "homeDescription": "Skróć długie adresy URL, generuj kody QR i mierz kliknięcia oraz skany w jednym miejscu.",
+  "stats": {
+    "linkDetailsPrefix": "Szczegóły",
+    "linkDetailsSuffix": "linku",
+    "subtitle": "Statystyki dla linku",
+    "qrCode": "Kod QR",
+    "downloadQr": "Pobierz QR (JPG)",
+    "statistics": "Statystyki",
+    "redirects": "Przekierowania:",
+    "qrScans": "Skanowania QR:",
+    "created": "Utworzono:",
+    "lastAccessed": "Ostatni dostęp:",
+    "never": "Nigdy"
+  },
+  "copy": {
+    "shortLink": "krótki link",
+    "originalUrl": "oryginalny URL"
+  }
 }
+
