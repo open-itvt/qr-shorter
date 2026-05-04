@@ -217,11 +217,11 @@ export default function LanguageAccessibilityModal({
   }
 
   return createPortal(
-    <div ref={overlayRef} className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-2 sm:items-center sm:p-4 lg:p-6">
+    <div ref={overlayRef} className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/45 p-2 sm:items-center sm:p-4 lg:p-6">
       <button
         type="button"
         aria-label={labels.close}
-        className="absolute inset-0 cursor-default bg-slate-950/60 focus-visible:outline-none"
+        className="absolute inset-0 cursor-default bg-transparent focus-visible:outline-none"
         onClick={onClose}
         tabIndex={-1}
       />
@@ -233,12 +233,12 @@ export default function LanguageAccessibilityModal({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}
-        className="relative z-10 my-2 max-h-[calc(100dvh-1rem)] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-2xl dark:border-slate-700 sm:my-0 sm:p-6 lg:p-7"
+        className="relative z-10 my-2 max-h-[calc(100dvh-1rem)] w-full max-w-3xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-lg dark:border-slate-700 dark:bg-slate-950 sm:my-0 sm:p-5 lg:p-6"
       >
         <div className="flex items-start justify-between gap-3">
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary/90 dark:text-primary sm:text-sm">{labels.chooseLanguage}</p>
-            <h2 id={titleId} className="text-xl font-extrabold leading-tight text-foreground dark:text-white sm:text-2xl">
+            <h2 id={titleId} className="text-xl font-semibold leading-tight text-slate-950 dark:text-white sm:text-[1.7rem]">
               {labels.title}
             </h2>
           </div>
@@ -246,7 +246,7 @@ export default function LanguageAccessibilityModal({
             type="button"
             onClick={onClose}
             aria-label={labels.close}
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             <svg
               viewBox="0 0 24 24"
@@ -264,56 +264,58 @@ export default function LanguageAccessibilityModal({
           </button>
         </div>
 
-        <p id={descriptionId} className="mt-3 max-w-3xl text-sm leading-6 text-slate-700 dark:text-slate-200 sm:text-[15px]">
+        <p id={descriptionId} className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-[15px]">
           {labels.description}
         </p>
 
-        <div className="mt-4 space-y-5 sm:mt-5 sm:space-y-6">
+        <div className="mt-4 space-y-4 sm:mt-5 sm:space-y-5">
           <section className="space-y-3" aria-labelledby="language-section-title">
-            <h3 id="language-section-title" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300 sm:text-sm">
+            <h3 id="language-section-title" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-sm">
               {labels.chooseLanguage}
             </h3>
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
               <button
                 type="button"
                 onClick={() => onSelectLanguage("pl")}
                 aria-pressed={currentLanguage === "pl"}
-                className="flex min-h-18 flex-col justify-between gap-2.5 rounded-2xl border border-slate-200 bg-white px-3.5 py-3.5 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-20 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <span className="block text-[15px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.polish}</span>
-                <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">
-                  {currentLanguage === "pl" ? labels.currentLanguage : labels.reloadNote}
-                </span>
+                <div className="min-w-0">
+                  <span className="block text-[15px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.polish}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentLanguage === "pl" ? labels.currentLanguage : labels.reloadNote}</span>
+                </div>
+                <span className={currentLanguage === "pl" ? "h-2.5 w-2.5 shrink-0 rounded-full bg-slate-950 dark:bg-white" : "h-2.5 w-2.5 shrink-0 rounded-full border border-slate-300 dark:border-slate-600"} />
               </button>
 
               <button
                 type="button"
                 onClick={() => onSelectLanguage("en")}
                 aria-pressed={currentLanguage === "en"}
-                className="flex min-h-18 flex-col justify-between gap-2.5 rounded-2xl border border-slate-200 bg-white px-3.5 py-3.5 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-20 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <span className="block text-[15px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.english}</span>
-                <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">
-                  {currentLanguage === "en" ? labels.currentLanguage : labels.reloadNote}
-                </span>
+                <div className="min-w-0">
+                  <span className="block text-[15px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.english}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentLanguage === "en" ? labels.currentLanguage : labels.reloadNote}</span>
+                </div>
+                <span className={currentLanguage === "en" ? "h-2.5 w-2.5 shrink-0 rounded-full bg-slate-950 dark:bg-white" : "h-2.5 w-2.5 shrink-0 rounded-full border border-slate-300 dark:border-slate-600"} />
               </button>
             </div>
           </section>
 
           <section className="space-y-3" aria-labelledby="contrast-section-title">
-            <h3 id="contrast-section-title" className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300">
+            <h3 id="contrast-section-title" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-sm">
               {labels.chooseContrast}
             </h3>
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-2 sm:grid-cols-3 sm:gap-3">
               <button
                 type="button"
                 onClick={() => onSelectContrast("default")}
                 aria-pressed={currentContrast === "default"}
-                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-slate-50 hover:to-slate-100 dark:border-slate-700 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 dark:text-slate-100 sm:min-h-22 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <div className="space-y-1">
-                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.contrastDefault}</span>
-                  <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentContrast === "default" ? labels.current : labels.reloadNote}</span>
+                <div className="min-w-0">
+                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.contrastDefault}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentContrast === "default" ? labels.current : labels.reloadNote}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                   <TinyContrastIcon mode="default" />
@@ -325,11 +327,11 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectContrast("high")}
                 aria-pressed={currentContrast === "high"}
-                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-amber-300 bg-gradient-to-br from-amber-50 via-yellow-100 to-amber-200 px-3 py-3 text-left text-sm font-semibold text-amber-950 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-amber-100 hover:to-amber-200 dark:border-amber-300/50 dark:bg-gradient-to-br dark:from-amber-300/15 dark:via-yellow-300/10 dark:to-amber-500/15 dark:text-amber-100 sm:min-h-22 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-3 py-3 text-left text-sm font-medium text-amber-950 transition hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-amber-300/50 dark:bg-amber-300/10 dark:text-amber-100 dark:hover:bg-amber-300/15 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <div className="space-y-1">
-                  <span className="block text-[14px] leading-5 text-amber-950 dark:text-amber-100 sm:text-base">{labels.contrastYellow}</span>
-                  <span className="block text-[11px] font-medium leading-4 text-amber-950/75 dark:text-amber-100/80 sm:text-xs">{currentContrast === "high" ? labels.current : labels.reloadNote}</span>
+                <div className="min-w-0">
+                  <span className="block text-[14px] font-semibold leading-5 text-amber-950 dark:text-amber-100 sm:text-base">{labels.contrastYellow}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-amber-950/70 dark:text-amber-100/80 sm:text-xs">{currentContrast === "high" ? labels.current : labels.reloadNote}</span>
                 </div>
                 <div className="flex items-center gap-2 text-amber-950/75 dark:text-amber-100/75">
                   <TinyContrastIcon mode="high" />
@@ -341,11 +343,11 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectContrast("extra")}
                 aria-pressed={currentContrast === "extra"}
-                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-300 bg-gradient-to-br from-black via-slate-950 to-white px-3 py-3 text-left text-sm font-semibold text-slate-950 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-slate-900 hover:to-slate-100 dark:border-slate-200/40 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-white dark:text-white sm:min-h-22 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-300 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-200/30 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <div className="space-y-1">
-                  <span className="block text-[14px] leading-5 text-white sm:text-base">{labels.contrastMono}</span>
-                  <span className="block text-[11px] font-medium leading-4 text-slate-700/80 dark:text-slate-200/80 sm:text-xs">{currentContrast === "extra" ? labels.current : labels.reloadNote}</span>
+                <div className="min-w-0">
+                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.contrastMono}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentContrast === "extra" ? labels.current : labels.reloadNote}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
                   <TinyContrastIcon mode="extra" />
@@ -356,19 +358,19 @@ export default function LanguageAccessibilityModal({
           </section>
 
           <section className="space-y-3" aria-labelledby="font-section-title">
-            <h3 id="font-section-title" className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300">
+            <h3 id="font-section-title" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-sm">
               {labels.chooseFont}
             </h3>
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-2 sm:grid-cols-3 sm:gap-3">
               <button
                 type="button"
                 onClick={() => onSelectFont("default")}
                 aria-pressed={currentFont === "default"}
-                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-22 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <div className="space-y-1">
-                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontDefault}</span>
-                  <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "default" ? labels.current : labels.reloadNote}</span>
+                <div className="min-w-0">
+                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.fontDefault}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentFont === "default" ? labels.current : labels.reloadNote}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                   <TinyFontIcon mode="default" />
@@ -380,11 +382,11 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectFont("readable")}
                 aria-pressed={currentFont === "readable"}
-                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-22 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <div className="space-y-1">
-                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontReadable}</span>
-                  <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "readable" ? labels.current : labels.reloadNote}</span>
+                <div className="min-w-0">
+                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.fontReadable}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentFont === "readable" ? labels.current : labels.reloadNote}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                   <TinyFontIcon mode="readable" />
@@ -396,11 +398,11 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectFont("serif")}
                 aria-pressed={currentFont === "serif"}
-                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-22 sm:px-4 sm:py-4"
+                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
               >
-                <div className="space-y-1">
-                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontSerif}</span>
-                  <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "serif" ? labels.current : labels.reloadNote}</span>
+                <div className="min-w-0">
+                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.fontSerif}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentFont === "serif" ? labels.current : labels.reloadNote}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                   <TinyFontIcon mode="serif" />
@@ -411,7 +413,7 @@ export default function LanguageAccessibilityModal({
           </section>
 
           <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-200 sm:text-[15px]">{labels.description}</p>
+            <p className="max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-[15px]">{labels.description}</p>
             <button
               type="button"
               onClick={() => {
