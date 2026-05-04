@@ -43,6 +43,63 @@ type LanguageAccessibilityModalProps = {
 const focusableSelector =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+function TinyContrastIcon({ mode }: { mode: ContrastMode }) {
+  if (mode === "high") {
+    return (
+      <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
+        <circle cx="10" cy="10" r="7" fill="#FACC15" stroke="#A16207" strokeWidth="1.2" />
+        <path d="M10 4.5v11" stroke="#111827" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (mode === "extra") {
+    return (
+      <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
+        <circle cx="10" cy="10" r="7" fill="#111111" stroke="#E5E7EB" strokeWidth="1.2" />
+        <path d="M6.8 10h6.4" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
+      <circle cx="10" cy="10" r="7" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.2" />
+      <path d="M6.8 10h6.4" stroke="#475569" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function TinyFontIcon({ mode }: { mode: FontMode }) {
+  if (mode === "readable") {
+    return (
+      <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
+        <text x="3" y="13.5" fontSize="10" fontFamily="Verdana, Arial, sans-serif" fontWeight="700" fill="currentColor">
+          Aa
+        </text>
+      </svg>
+    );
+  }
+
+  if (mode === "serif") {
+    return (
+      <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
+        <text x="3" y="13.5" fontSize="10" fontFamily="Georgia, Cambria, 'Times New Roman', serif" fontWeight="700" fill="currentColor">
+          Aa
+        </text>
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
+      <text x="3" y="13.5" fontSize="10" fontFamily="Inter, system-ui, sans-serif" fontWeight="700" fill="currentColor">
+        Aa
+      </text>
+    </svg>
+  );
+}
+
 export default function LanguageAccessibilityModal({
   isOpen,
   currentLanguage,
@@ -258,11 +315,9 @@ export default function LanguageAccessibilityModal({
                   <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.contrastDefault}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentContrast === "default" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-100" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-500" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-900" />
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
+                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                  <TinyContrastIcon mode="default" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
                 </div>
               </button>
 
@@ -276,11 +331,9 @@ export default function LanguageAccessibilityModal({
                   <span className="block text-[14px] leading-5 text-amber-950 dark:text-amber-100 sm:text-base">{labels.contrastYellow}</span>
                   <span className="block text-[11px] font-medium leading-4 text-amber-950/75 dark:text-amber-100/80 sm:text-xs">{currentContrast === "high" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-3.5 rounded-full border border-amber-400 bg-yellow-300" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-900 bg-black" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-white" />
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-950/75 dark:text-amber-100/75">Aa</span>
+                <div className="flex items-center gap-2 text-amber-950/75 dark:text-amber-100/75">
+                  <TinyContrastIcon mode="high" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
                 </div>
               </button>
 
@@ -294,11 +347,9 @@ export default function LanguageAccessibilityModal({
                   <span className="block text-[14px] leading-5 text-white sm:text-base">{labels.contrastMono}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-700/80 dark:text-slate-200/80 sm:text-xs">{currentContrast === "extra" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-3.5 rounded-full border border-black bg-white" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-white bg-black" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-400 bg-slate-200" />
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-700 dark:text-slate-200">Aa</span>
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                  <TinyContrastIcon mode="extra" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
                 </div>
               </button>
             </div>
@@ -319,11 +370,9 @@ export default function LanguageAccessibilityModal({
                   <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontDefault}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "default" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-100" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-500" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-900" />
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
+                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                  <TinyFontIcon mode="default" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
                 </div>
               </button>
 
@@ -337,11 +386,9 @@ export default function LanguageAccessibilityModal({
                   <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontReadable}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "readable" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-amber-100" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-amber-300" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-amber-500" />
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
+                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                  <TinyFontIcon mode="readable" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
                 </div>
               </button>
 
@@ -355,11 +402,9 @@ export default function LanguageAccessibilityModal({
                   <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontSerif}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "serif" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-100" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-500" />
-                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-700" />
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
+                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                  <TinyFontIcon mode="serif" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
                 </div>
               </button>
             </div>
