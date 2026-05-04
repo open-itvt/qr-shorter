@@ -33,39 +33,38 @@ type LanguageAccessibilityModalProps = {
   currentLanguage: LanguageCode;
   currentContrast: ContrastMode;
   currentFont: FontMode;
+  currentFontSize: number;
   labels: LanguageAccessibilityModalLabels;
   onClose: () => void;
   onSelectLanguage: (language: LanguageCode) => void;
   onSelectContrast: (contrast: ContrastMode) => void;
   onSelectFont: (font: FontMode) => void;
+  onSelectFontSize: (fontSize: number) => void;
 };
 
 const focusableSelector =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function TinyContrastIcon({ mode }: { mode: ContrastMode }) {
-  if (mode === "high") {
-    return (
-      <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
-        <circle cx="10" cy="10" r="7" fill="#FACC15" stroke="#A16207" strokeWidth="1.2" />
-        <path d="M10 4.5v11" stroke="#111827" strokeWidth="1.2" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (mode === "extra") {
-    return (
-      <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
-        <circle cx="10" cy="10" r="7" fill="#111111" stroke="#E5E7EB" strokeWidth="1.2" />
-        <path d="M6.8 10h6.4" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
   return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
-      <circle cx="10" cy="10" r="7" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.2" />
-      <path d="M6.8 10h6.4" stroke="#475569" strokeWidth="1.2" strokeLinecap="round" />
+    <svg viewBox="0 0 48 48" aria-hidden="true" className="h-6 w-6 shrink-0" fill="#ffffff" stroke="#ffffff">
+      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
+      <g id="SVGRepo_iconCarrier">
+        <title>palette</title>
+        <g id="Layer_2" data-name="Layer 2">
+          <g id="invisible_box" data-name="invisible box">
+            <rect width="48" height="48" fill="none" />
+          </g>
+          <g id="icons_Q2" data-name="icons Q2">
+            <path d="M26.6,6H27c8.1,0,15,5.5,15,12S40.4,29,28,29c-3.8,0-5.8,2.2-6.4,4.3a5.5,5.5,0,0,0,2.3,6.1c1,.6,1,1.3.9,1.7a1.2,1.2,0,0,1-1.3.9C11.4,42,6,33,6,24S15.2,6,26.5,6h.1m-.1-4C13,2,2,11.8,2,24s8,22,21.5,22C29,46,31,39,26,36c-.9-.6-1-3,2-3,9,0,18-3,18-15C46,9,37,2,27,2Z" />
+            <path d="M21,10a3,3,0,1,0,3,3,2.9,2.9,0,0,0-3-3Z" />
+            <path d="M14,15a3,3,0,1,0,3,3,2.9,2.9,0,0,0-3-3Z" />
+            <path d="M29,9a3,3,0,1,0,3,3,2.9,2.9,0,0,0-3-3Z" />
+            <path d="M36,14a3,3,0,1,0,3,3,2.9,2.9,0,0,0-3-3Z" />
+          </g>
+        </g>
+      </g>
     </svg>
   );
 }
@@ -105,11 +104,13 @@ export default function LanguageAccessibilityModal({
   currentLanguage,
   currentContrast,
   currentFont,
+  currentFontSize,
   labels,
   onClose,
   onSelectLanguage,
   onSelectContrast,
   onSelectFont,
+  onSelectFontSize,
 }: LanguageAccessibilityModalProps) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -217,11 +218,11 @@ export default function LanguageAccessibilityModal({
   }
 
   return createPortal(
-    <div ref={overlayRef} className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/45 p-2 sm:items-center sm:p-4 lg:p-6">
+    <div ref={overlayRef} className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 sm:items-center">
       <button
         type="button"
         aria-label={labels.close}
-        className="absolute inset-0 cursor-default bg-transparent focus-visible:outline-none"
+        className="absolute inset-0 cursor-default bg-transparent"
         onClick={onClose}
         tabIndex={-1}
       />
@@ -233,197 +234,166 @@ export default function LanguageAccessibilityModal({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}
-        className="relative z-10 my-2 max-h-[calc(100dvh-1rem)] w-full max-w-3xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-lg dark:border-slate-700 dark:bg-slate-950 sm:my-0 sm:p-5 lg:p-6"
+        className="relative z-10 w-full max-w-4xl transform overflow-hidden rounded-3xl border border-slate-700 bg-slate-950 p-6 text-left shadow-2xl sm:p-8"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1.5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary/90 dark:text-primary sm:text-sm">{labels.chooseLanguage}</p>
-            <h2 id={titleId} className="text-xl font-semibold leading-tight text-slate-950 dark:text-white sm:text-[1.7rem]">
-              {labels.title}
-            </h2>
+        <div className="flex items-start justify-between">
+          <div className="max-w-[70%]">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-400">{labels.chooseLanguage}</p>
+            <h2 id={titleId} className="text-3xl font-bold leading-tight text-white">{labels.title}</h2>
+            <p id={descriptionId} className="mt-3 text-sm text-slate-300">{labels.description}</p>
           </div>
+
           <button
             type="button"
             onClick={onClose}
             aria-label={labels.close}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="ml-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-400"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-5 w-5"
-              aria-hidden="true"
-            >
-              <path d="M18 6 6 18" />
-              <path d="M6 6l12 12" />
+            <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor">
+              <path d="M18 6 6 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M6 6l12 12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
 
-        <p id={descriptionId} className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-[15px]">
-          {labels.description}
-        </p>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          <div className="space-y-6">
+            <div>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseLanguage}</h3>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => onSelectLanguage("pl")}
+                  aria-pressed={currentLanguage === "pl"}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${currentLanguage === "pl" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                >
+                  <div className="mb-1 text-base">{labels.polish}</div>
+                  <div className="text-xs text-slate-400">{currentLanguage === "pl" ? labels.currentLanguage : labels.reloadNote}</div>
+                </button>
 
-        <div className="mt-4 space-y-4 sm:mt-5 sm:space-y-5">
-          <section className="space-y-3" aria-labelledby="language-section-title">
-            <h3 id="language-section-title" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-sm">
-              {labels.chooseLanguage}
-            </h3>
-            <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => onSelectLanguage("pl")}
-                aria-pressed={currentLanguage === "pl"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[15px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.polish}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentLanguage === "pl" ? labels.currentLanguage : labels.reloadNote}</span>
-                </div>
-                <span className={currentLanguage === "pl" ? "h-2.5 w-2.5 shrink-0 rounded-full bg-slate-950 dark:bg-white" : "h-2.5 w-2.5 shrink-0 rounded-full border border-slate-300 dark:border-slate-600"} />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onSelectLanguage("en")}
-                aria-pressed={currentLanguage === "en"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[15px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.english}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentLanguage === "en" ? labels.currentLanguage : labels.reloadNote}</span>
-                </div>
-                <span className={currentLanguage === "en" ? "h-2.5 w-2.5 shrink-0 rounded-full bg-slate-950 dark:bg-white" : "h-2.5 w-2.5 shrink-0 rounded-full border border-slate-300 dark:border-slate-600"} />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => onSelectLanguage("en")}
+                  aria-pressed={currentLanguage === "en"}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${currentLanguage === "en" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                >
+                  <div className="mb-1 text-base">{labels.english}</div>
+                  <div className="text-xs text-slate-400">{currentLanguage === "en" ? labels.currentLanguage : labels.reloadNote}</div>
+                </button>
+              </div>
             </div>
-          </section>
 
-          <section className="space-y-3" aria-labelledby="contrast-section-title">
-            <h3 id="contrast-section-title" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-sm">
-              {labels.chooseContrast}
-            </h3>
-            <div className="grid gap-2 sm:grid-cols-3 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => onSelectContrast("default")}
-                aria-pressed={currentContrast === "default"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.contrastDefault}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentContrast === "default" ? labels.current : labels.reloadNote}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+            <div>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseContrast}</h3>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => onSelectContrast("default")}
+                  aria-pressed={currentContrast === "default"}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "default" ? "border-white bg-slate-800" : "border-slate-700 bg-slate-900"}`}
+                  title={labels.contrastDefault}
+                >
                   <TinyContrastIcon mode="default" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
-                </div>
-              </button>
+                </button>
 
-              <button
-                type="button"
-                onClick={() => onSelectContrast("high")}
-                aria-pressed={currentContrast === "high"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-3 py-3 text-left text-sm font-medium text-amber-950 transition hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-amber-300/50 dark:bg-amber-300/10 dark:text-amber-100 dark:hover:bg-amber-300/15 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[14px] font-semibold leading-5 text-amber-950 dark:text-amber-100 sm:text-base">{labels.contrastYellow}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-amber-950/70 dark:text-amber-100/80 sm:text-xs">{currentContrast === "high" ? labels.current : labels.reloadNote}</span>
-                </div>
-                <div className="flex items-center gap-2 text-amber-950/75 dark:text-amber-100/75">
+                <button
+                  type="button"
+                  onClick={() => onSelectContrast("high")}
+                  aria-pressed={currentContrast === "high"}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "high" ? "border-amber-300 bg-amber-400" : "border-amber-300 bg-amber-50/0"}`}
+                  title={labels.contrastYellow}
+                >
                   <TinyContrastIcon mode="high" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
-                </div>
-              </button>
+                </button>
 
-              <button
-                type="button"
-                onClick={() => onSelectContrast("extra")}
-                aria-pressed={currentContrast === "extra"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-300 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-900 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-200/30 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.contrastMono}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentContrast === "extra" ? labels.current : labels.reloadNote}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                <button
+                  type="button"
+                  onClick={() => onSelectContrast("extra")}
+                  aria-pressed={currentContrast === "extra"}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "extra" ? "border-white bg-black" : "border-slate-700 bg-slate-900"}`}
+                  title={labels.contrastMono}
+                >
                   <TinyContrastIcon mode="extra" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
-                </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseFont}</h3>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => onSelectFont("default")}
+                  aria-pressed={currentFont === "default"}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "default" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                >
+                  {labels.fontDefault}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSelectFont("readable")}
+                  aria-pressed={currentFont === "readable"}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "readable" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                >
+                  {labels.fontReadable}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSelectFont("serif")}
+                  aria-pressed={currentFont === "serif"}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "serif" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                >
+                  {labels.fontSerif}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">Select font size</h3>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => onSelectFontSize(100)}
+                  aria-pressed={currentFontSize === 100}
+                  aria-label="Reset font size to 100%"
+                  className={`rounded text-2xl transition ${currentFontSize === 100 ? "text-white" : "text-slate-200 hover:text-white"}`}
+                >
+                  Aa
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSelectFontSize(Math.min(200, currentFontSize + 10))}
+                  aria-label="Increase font size by 10%"
+                  className="rounded text-3xl font-bold text-slate-200 transition hover:text-white"
+                >
+                  A+
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSelectFontSize(Math.max(80, currentFontSize - 10))}
+                  aria-label="Decrease font size by 10%"
+                  className="rounded text-xl text-slate-200 transition hover:text-white"
+                >
+                  A-
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-2 flex items-center justify-between border-t border-slate-800 pt-4">
+              <div className="text-sm text-slate-400" />
+              <button
+                type="button"
+                onClick={() => {
+                  onSelectContrast("default");
+                  onSelectFont("default");
+                }}
+                className="ml-4 rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
+              >
+                {labels.reset}
               </button>
             </div>
-          </section>
-
-          <section className="space-y-3" aria-labelledby="font-section-title">
-            <h3 id="font-section-title" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-sm">
-              {labels.chooseFont}
-            </h3>
-            <div className="grid gap-2 sm:grid-cols-3 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => onSelectFont("default")}
-                aria-pressed={currentFont === "default"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.fontDefault}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentFont === "default" ? labels.current : labels.reloadNote}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                  <TinyFontIcon mode="default" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onSelectFont("readable")}
-                aria-pressed={currentFont === "readable"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.fontReadable}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentFont === "readable" ? labels.current : labels.reloadNote}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                  <TinyFontIcon mode="readable" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onSelectFont("serif")}
-                aria-pressed={currentFont === "serif"}
-                className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-left text-sm font-medium text-slate-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-18 sm:px-4 sm:py-3.5"
-              >
-                <div className="min-w-0">
-                  <span className="block text-[14px] font-semibold leading-5 text-slate-950 dark:text-white sm:text-base">{labels.fontSerif}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs">{currentFont === "serif" ? labels.current : labels.reloadNote}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                  <TinyFontIcon mode="serif" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em]">Aa</span>
-                </div>
-              </button>
-            </div>
-          </section>
-
-          <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-[15px]">{labels.description}</p>
-            <button
-              type="button"
-              onClick={() => {
-                onSelectContrast("default");
-                onSelectFont("default");
-              }}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:w-auto"
-            >
-              {labels.reset}
-            </button>
           </div>
         </div>
       </div>

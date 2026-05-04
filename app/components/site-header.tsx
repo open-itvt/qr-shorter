@@ -81,6 +81,17 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     return "default";
   });
 
+  const [fontSize, setFontSize] = useState<number>(() => {
+    if (typeof window === "undefined") return 100;
+
+    try {
+      const stored = Number(localStorage.getItem("font-size"));
+      if (Number.isFinite(stored) && stored >= 80 && stored <= 200) return stored;
+    } catch {}
+
+    return 100;
+  });
+
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
   useEffect(() => {
@@ -123,6 +134,12 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     localStorage.setItem("font-mode", font);
   }, [font]);
 
+  useEffect(() => {
+    const clampedFontSize = Math.min(200, Math.max(80, fontSize));
+    document.documentElement.style.fontSize = `${clampedFontSize}%`;
+    localStorage.setItem("font-size", String(clampedFontSize));
+  }, [fontSize]);
+
   const toggleTheme = () => {
     setTheme((current) => (current === "light" ? "dark" : "light"));
   };
@@ -148,6 +165,10 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
 
   const applyFont = (next: FontMode) => {
     setFont(next);
+  };
+
+  const applyFontSize = (next: number) => {
+    setFontSize(Math.min(200, Math.max(80, next)));
   };
 
   return (
@@ -225,11 +246,13 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
         currentLanguage={lang}
         currentContrast={contrast}
         currentFont={font}
+        currentFontSize={fontSize}
         labels={labels.accessibility}
         onClose={() => setIsLanguageModalOpen(false)}
         onSelectLanguage={applyLanguage}
         onSelectContrast={applyContrast}
         onSelectFont={applyFont}
+        onSelectFontSize={applyFontSize}
       />
     </>
   );

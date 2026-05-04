@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { Viewport } from "next";
+import Link from "next/link";
 import "./globals.css";
 import {
-  alternateSiteName,
   getSeoBaseUrl,
   getWebsiteJsonLd,
   siteDescription,
@@ -70,6 +70,15 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("site-language")?.value ?? null;
   const htmlLang = langCookie === "en" || langCookie === "pl" ? langCookie : "pl";
+  const footerLabels = htmlLang === "pl"
+    ? {
+        privacy: "Polityka prywatności",
+        copyright: "© 2026 QR Shorter. Wszystkie prawa zastrzeżone.",
+      }
+    : {
+        privacy: "Privacy Policy",
+        copyright: "© 2026 QR Shorter. All rights reserved.",
+      };
 
   return (
     <html lang={htmlLang} className="h-full antialiased" suppressHydrationWarning>
@@ -81,7 +90,12 @@ export default async function RootLayout({
         />
         <div className="flex-1">{children}</div>
         <footer className="border-t border-slate-200 px-4 py-4 text-center text-sm text-slate-400 dark:border-slate-800">
-          {alternateSiteName} · (C) 2026 - Copyright iTVT Poland Group
+          <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 sm:flex-row sm:justify-between">
+            <span>{footerLabels.copyright}</span>
+            <Link href="/privacy" className="font-medium text-primary transition hover:underline">
+              {footerLabels.privacy}
+            </Link>
+          </div>
         </footer>
       </body>
     </html>
