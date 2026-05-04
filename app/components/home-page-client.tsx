@@ -222,14 +222,25 @@ export default function HomePageClient() {
         </div>
 
         <div className="flex w-full flex-col items-center">
+          {/* ARIA live region for dynamic status messages (errors, success, copy) */}
+          <div aria-live="polite" aria-atomic="true" className="sr-only" id="site-announcer">
+            {/* content updated programmatically via error/result state */}
+          </div>
           <form
             onSubmit={onSubmit}
             className="flex w-full max-w-3xl flex-col gap-3 rounded-t-3xl border border-slate-200 border-b-0 bg-surface p-3 pb-10 sm:gap-4 sm:rounded-t-4xl sm:border-b sm:p-4 md:rounded-4xl dark:border-slate-700"
           >
             <div className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-2">
+              <label htmlFor="shorten-url" className="sr-only">
+                {siteLang === "pl" ? "Długi link do skrócenia" : "Long URL to shorten"}
+              </label>
               <input
+                id="shorten-url"
                 type="url"
                 required
+                aria-required="true"
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? "shorten-error" : undefined}
                 placeholder={siteLang === "pl" ? "Wrzuć długi link, aby go skrócić..." : "Paste long URL to shorten..."}
                 autoComplete="url"
                 autoCorrect="off"
@@ -248,7 +259,7 @@ export default function HomePageClient() {
             </div>
 
             {error ? (
-              <p className="text-left text-sm font-medium text-red-500">
+              <p id="shorten-error" className="text-left text-sm font-medium text-red-500">
                 {retryAfter
                   ? siteLang === "pl"
                     ? `Przekroczono limit. Spróbuj ponownie za ${retryAfter >= 60 ? `${Math.floor((retryAfter ?? 0) / 60)}m` : `${retryAfter}s`}.`
@@ -259,9 +270,10 @@ export default function HomePageClient() {
 
             <div
               id="content-options"
+              aria-labelledby="content-options-heading"
               className={isOtherFunctionsOpen ? "mt-3 flex w-full max-w-3xl flex-col items-center rounded-3xl border border-slate-200 bg-surface p-4 text-center dark:border-slate-700" : "hidden"}
             >
-              <h2 className="mb-4 text-center text-xl font-bold">{siteLang === "pl" ? "Więcej funkcji" : "More functions"}</h2>
+              <h2 id="content-options-heading" className="mb-4 text-center text-xl font-bold">{siteLang === "pl" ? "Więcej funkcji" : "More functions"}</h2>
 
               <div
                 className="mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
@@ -271,19 +283,25 @@ export default function HomePageClient() {
               </div>
 
               <div className="flex w-full max-w-md items-center justify-center gap-2">
-                <label className="shrink-0 cursor-pointer whitespace-nowrap text-sm font-semibold">
+                <label htmlFor="custom-code" className="shrink-0 cursor-pointer whitespace-nowrap text-sm font-semibold">
                   go.itvt.xyz/
                 </label>
+                <label className="sr-only" htmlFor="custom-code">
+                  {siteLang === "pl" ? "Własny kod" : "Custom code"}
+                </label>
                 <input
+                  id="custom-code"
                   type="text"
                   placeholder={siteLang === "pl" ? "wlasny_url" : "custom_url"}
                   minLength={5}
                   maxLength={30}
+                  aria-describedby={"custom-code-help"}
                   style={{colorScheme: theme}}
                   value={customCode}
                   onChange={(event) => setCustomCode(event.target.value)}
                   className="min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base outline-none transition focus:border-primary sm:px-6 dark:border-slate-700 dark:bg-slate-900"
                 />
+                <div id="custom-code-help" className="sr-only">{siteLang === "pl" ? "Min 5, max 30 znaków" : "Min 5, max 30 chars"}</div>
               </div>
 
               <div
@@ -320,7 +338,11 @@ export default function HomePageClient() {
 
                 {expiryMode === "none" ? null : expiryMode === "date" ? (
                   <div className="flex w-70 items-center justify-center gap-2">
+                    <label className="sr-only" htmlFor="expiry-date">
+                      {siteLang === "pl" ? "Data wygaśnięcia" : "Expiry date"}
+                    </label>
                     <input
+                      id="expiry-date"
                       type="date"
                       value={expiryDate}
                       onChange={(event) => setExpiryDate(event.target.value)}
@@ -330,17 +352,22 @@ export default function HomePageClient() {
                   </div>
                 ) : (
                   <div className="flex w-40 items-center justify-center gap-2">
+                    <label className="sr-only" htmlFor="expiry-days">
+                      {siteLang === "pl" ? "Ilość dni ważności" : "Number of days"}
+                    </label>
                     <input
+                      id="expiry-days"
                       type="number"
                       min={1}
                       max={365}
                       value={expiryDays}
                       onChange={(event) => setExpiryDays(event.target.value)}
+                      aria-describedby={"expiry-days-help"}
                       style={{colorScheme: theme}}
                       className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base outline-none transition focus:border-primary dark:border-slate-700 dark:bg-slate-900"
                     />
-                    <span className="shrink-0 text-sm font-medium text-slate-500 dark:text-slate-400">
-                      dni
+                    <span id="expiry-days-help" className="shrink-0 text-sm font-medium text-slate-500 dark:text-slate-400">
+                      {siteLang === "pl" ? "dni" : "days"}
                     </span>
                   </div>
                 )}

@@ -9,25 +9,31 @@ type CopyLinkButtonProps = {
 
 export default function CopyLinkButton({ value, label }: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false);
+  const [announce, setAnnounce] = useState<string | null>(null);
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
+      setAnnounce(`${label} copied`);
       window.setTimeout(() => setCopied(false), 1500);
+      window.setTimeout(() => setAnnounce(null), 1500);
     } catch {
       setCopied(false);
+      setAnnounce(`Failed to copy ${label}`);
+      window.setTimeout(() => setAnnounce(null), 1500);
     }
   };
 
   return (
-    <button
-      type="button"
-      onClick={copyToClipboard}
-      aria-label={`Skopiuj ${label}`}
-      title={copied ? "Skopiowano" : `Skopiuj ${label}`}
-      className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 text-sm font-semibold text-primary transition hover:bg-primary/20 dark:border-primary/45"
-    >
+    <div>
+      <button
+        type="button"
+        onClick={copyToClipboard}
+        aria-label={`${label} - copy`}
+        title={copied ? "Skopiowano" : `Skopiuj ${label}`}
+        className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 text-sm font-semibold text-primary transition hover:bg-primary/20 dark:border-primary/45"
+      >
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -41,7 +47,11 @@ export default function CopyLinkButton({ value, label }: CopyLinkButtonProps) {
         <rect x="9" y="9" width="13" height="13" rx="2" />
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </svg>
-      <span>{copied ? "Skopiowano" : "Copy"}</span>
-    </button>
+        <span>{copied ? "Skopiowano" : "Copy"}</span>
+      </button>
+      <div role="status" aria-live="polite" className="sr-only">
+        {announce}
+      </div>
+    </div>
   );
 }

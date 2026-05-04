@@ -9,6 +9,7 @@ import {
   siteKeywords,
   siteName,
 } from "@/lib/seo";
+import { cookies } from "next/headers";
 
 const baseUrl = getSeoBaseUrl();
 
@@ -59,15 +60,19 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const websiteJsonLd = getWebsiteJsonLd(baseUrl);
 
+  const cookieStore = await cookies();
+  const langCookie = cookieStore.get("site-language")?.value ?? null;
+  const htmlLang = langCookie === "en" || langCookie === "pl" ? langCookie : "pl";
+
   return (
-    <html lang="pl" className="h-full antialiased" suppressHydrationWarning>
+    <html lang={htmlLang} className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
         {/* Structured data helps Google understand the site as a Website entity. */}
         <script

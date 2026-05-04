@@ -28,6 +28,7 @@ export default function HistoryPageClient() {
   });
   const [error, setError] = useState<string | null>(null);
   const [copiedPublicId, setCopiedPublicId] = useState<string | null>(null);
+  const [announce, setAnnounce] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
       return "light";
@@ -53,11 +54,15 @@ export default function HistoryPageClient() {
     try {
       await navigator.clipboard.writeText(shortUrl);
       setCopiedPublicId(publicId);
+      setAnnounce("Copied short link");
       setTimeout(() => {
         setCopiedPublicId((current) => (current === publicId ? null : current));
+        setAnnounce(null);
       }, 1500);
     } catch {
-      setError("Nie udało się skopiować linku.");
+      const msg = "Nie udało się skopiować linku.";
+      setError(msg);
+      setAnnounce(msg);
     }
   };
 
@@ -75,7 +80,10 @@ export default function HistoryPageClient() {
           </p>
         </div>
 
-        {error ? <p className="w-full rounded-2xl bg-red-500/10 p-3 text-left text-sm text-red-500">{error}</p> : null}
+        {error ? <p id="history-error" className="w-full rounded-2xl bg-red-500/10 p-3 text-left text-sm text-red-500">{error}</p> : null}
+        <div role="status" aria-live="polite" className="sr-only">
+          {announce}
+        </div>
 
         {!hasItems ? (
           <section className="w-full rounded-3xl border border-slate-200 bg-surface p-6 text-sm text-muted shadow-sm dark:border-slate-700">

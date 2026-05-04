@@ -34,6 +34,10 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     } catch {}
     try {
       localStorage.setItem("site-language", lang);
+      // also set a cookie so server-side can read preferred language
+      try {
+        document.cookie = `site-language=${lang}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      } catch {}
     } catch {}
   }, [lang]);
 
@@ -75,6 +79,9 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
                 setLang(next);
                 try {
                   localStorage.setItem("site-language", next);
+                } catch {}
+                try {
+                  document.cookie = `site-language=${next}; path=/; max-age=${60 * 60 * 24 * 365}`;
                 } catch {}
                 // reload to ensure single-language rendering across app
                 window.location.reload();
