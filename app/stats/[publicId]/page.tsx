@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { getBaseUrl } from "@/lib/base-url";
 import { storage } from "@/lib/storage";
 import SiteHeader from "@/app/components/site-header";
-import CopyableLinkRow from "@/app/components/copyable-link-row";
+import Localized from "@/app/components/Localized";
+import LocalizedCopyableLinkRow from "@/app/components/localized-copyable-link-row";
 import { siteDescription, siteName } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -53,10 +54,16 @@ export default async function StatsDetailsPage({
 
       <section className="space-y-4 text-center">
         <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
-          <span className="text-primary">Szczegóły</span> linku
+          <span className="text-primary">
+            <Localized en="Link details" pl="Szczegóły" />
+          </span>{" "}
+          <Localized en="details" pl="linku" />
         </h1>
         <p className="mx-auto max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-9">
-          Otwórz dane linku, QR kod i statystyki w tym samym układzie co na stronie głównej.
+          <Localized
+            en="Open the link data, QR code and statistics in the same layout as on the homepage."
+            pl="Statystyki dla linku"
+          />
         </p>
       </section>
 
@@ -64,23 +71,24 @@ export default async function StatsDetailsPage({
         <div className="rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-sm sm:p-6 dark:border-slate-700">
           <h2 className="mb-4 text-xl font-bold">Przekierowanie</h2>
           <div className="space-y-3 text-sm">
-            <CopyableLinkRow
-              label="Krótki link:"
+            <LocalizedCopyableLinkRow
+              enLabel="Short link:"
+              plLabel="Krótki link:"
+              enCopyLabel="short link"
+              plCopyLabel="krótki link"
               value={shortUrl}
               href={shortUrl}
-              copyLabel="krótki link"
             />
-             <CopyableLinkRow label="Oryginalny URL:" value={stats.url} copyLabel="oryginalny URL" />
+            <LocalizedCopyableLinkRow enLabel="Original:" plLabel="Oryginalny URL:" plCopyLabel="oryginalny URL" value={stats.url} />
             <p className="break-all">
-              <a href={statsUrl} className="text-primary underline" target="_blank" rel="noreferrer">
-                {statsUrl}
-              </a>
             </p>
           </div>
         </div>
 
         <div className="rounded-3xl border border-slate-200 bg-surface p-4 text-center shadow-sm sm:p-6 dark:border-slate-700">
-          <h2 className="mb-4 text-xl font-bold">QR code</h2>
+          <h2 className="mb-4 text-xl font-bold">
+            <Localized en="QR code" pl="QR code" />
+          </h2>
           <Image
             src={`/api/qr/${stats.code}`}
             alt={`QR code for ${shortUrl}`}
@@ -94,26 +102,39 @@ export default async function StatsDetailsPage({
             download={`qr-${stats.code}.jpg`}
             className="mt-4 inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
           >
-            Download QR (JPG)
+            <Localized en="Download QR (JPG)" pl="Pobierz QR (JPG)" />
           </a>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-200 bg-surface p-4 text-left shadow-sm sm:p-6 dark:border-slate-700">
-        <h2 className="mb-4 text-xl font-bold">Statystyki</h2>
+        <h2 className="mb-4 text-xl font-bold">
+          <Localized en="Statistics" pl="Statystyki" />
+        </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <p>
-            <span className="font-semibold">Przekierowania:</span> {stats.totalClicks}
+            <span className="font-semibold">
+              <Localized en="Redirects:" pl="Przekierowania:" />
+            </span>{" "}
+            {stats.totalClicks}
           </p>
           <p>
-            <span className="font-semibold">Skanowania QR:</span> {stats.qrScans}
+            <span className="font-semibold">
+              <Localized en="QR scans:" pl="Skanowania QR:" />
+            </span>{" "}
+            {stats.qrScans}
           </p>
           <p>
-            <span className="font-semibold">Utworzono:</span> {new Date(stats.createdAt).toLocaleString()}
+            <span className="font-semibold">
+              <Localized en="Created:" pl="Utworzono:" />
+            </span>{" "}
+            {new Date(stats.createdAt).toLocaleString()}
           </p>
           <p>
-            <span className="font-semibold">Ostatni dostęp:</span>{" "}
-            {stats.lastAccessedAt ? new Date(stats.lastAccessedAt).toLocaleString() : "Nigdy"}
+            <span className="font-semibold">
+              <Localized en="Last accessed:" pl="Ostatni dostęp:" />
+            </span>{" "}
+            {stats.lastAccessedAt ? new Date(stats.lastAccessedAt).toLocaleString() : <Localized en="Never" pl="Nigdy" />}
           </p>
         </div>
       </section>
