@@ -35,9 +35,13 @@ Setting `NEXT_PUBLIC_BASE_URL` helps avoid links pointing to temporary preview d
 ## SEO setup
 
 - Set `NEXT_PUBLIC_BASE_URL` to the canonical production domain so metadata, JSON-LD, robots.txt, and sitemap URLs resolve correctly.
-- The app emits site-wide Schema.org `WebSite` JSON-LD, Open Graph, Twitter Card metadata, and a canonical title template.
+- The app emits site-wide Schema.org `WebSite` and `Organization` JSON-LD, Open Graph, Twitter Card metadata, and a canonical title template.
 - The following paths are blocked from indexing through metadata and `X-Robots-Tag` headers: `/api/*`, `/stats/*`, and `/redirect/*`.
 - Run `npm run build` after deploying to confirm the generated metadata routes (`/robots.txt` and `/sitemap.xml`) compile cleanly.
+
+## AI / LLM discovery
+
+- The site exposes a lightweight [`/llms.txt`](app/llms.txt/route.ts) endpoint with core page references and a no-analytics note.
 
 ## Run locally
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import {
   getSeoBaseUrl,
+  getOrganizationJsonLd,
   getWebsiteJsonLd,
   siteDescription,
   siteKeywords,
@@ -16,7 +17,7 @@ const baseUrl = getSeoBaseUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: siteName,
+    default: "URL Shortener & QR Code Generator",
     template: `%s | ${siteName}`,
   },
   description: siteDescription,
@@ -66,6 +67,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const websiteJsonLd = getWebsiteJsonLd(baseUrl);
+  const organizationJsonLd = getOrganizationJsonLd(baseUrl);
 
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("site-language")?.value ?? null;
@@ -86,7 +88,11 @@ export default async function RootLayout({
         {/* Structured data helps Google understand the site as a Website entity. */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{__html: JSON.stringify(websiteJsonLd)}}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <div className="flex-1">{children}</div>
         <footer className="border-t border-slate-200 px-4 py-4 text-center text-sm text-slate-400 dark:border-slate-800">

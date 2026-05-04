@@ -123,6 +123,8 @@ export default function HomePageClient() {
     setTheme(next);
   };
 
+  const colorSchemeClass = theme === "dark" ? "[color-scheme:dark]" : "[color-scheme:light]";
+
   const loadStats = async (publicId: string) => {
     setIsLoadingStats(true);
     setStatusMessage(siteLang === "pl" ? "Odświeżam statystyki." : "Refreshing statistics.");
@@ -284,7 +286,7 @@ export default function HomePageClient() {
             >
               <h2 id="content-options-heading" className="mb-4 text-center text-xl font-bold">{siteLang === "pl" ? "Więcej funkcji" : "More functions"}</h2>
 
-              <div className="mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400" style={{fontFamily: "Roboto, sans-serif"}}>
+              <div className="mb-2 font-sans text-base font-bold tracking-wide text-slate-500 dark:text-slate-400">
                 {siteLang === "pl" ? "Własny adres URL (min. 5 znaków, max. 30)" : "Custom URL (min. 5 chars, max. 30)"}
               </div>
               <p className="mb-4 max-w-md text-sm text-muted">
@@ -305,15 +307,14 @@ export default function HomePageClient() {
                   minLength={5}
                   maxLength={30}
                   aria-describedby={"custom-code-help"}
-                  style={{colorScheme: theme}}
+                  className={`min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-6 dark:border-slate-700 dark:bg-slate-900 ${colorSchemeClass}`}
                   value={customCode}
                   onChange={(event) => setCustomCode(event.target.value)}
-                  className="min-w-0 w-full max-w-xs flex-1 rounded-full border border-slate-200 bg-white p-3 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-6 dark:border-slate-700 dark:bg-slate-900"
                 />
                 <div id="custom-code-help" className="sr-only">{siteLang === "pl" ? "Min 5, max 30 znaków" : "Min 5, max 30 chars"}</div>
               </div>
 
-              <div className="mt-4 mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400" style={{fontFamily: "Roboto, sans-serif"}}>
+              <div className="mt-4 mb-2 font-sans text-base font-bold tracking-wide text-slate-500 dark:text-slate-400">
                 {siteLang === "pl" ? "Ograniczenia czasowe" : "Expiry options"}
               </div>
               <p className="mb-4 max-w-md text-sm text-muted">
@@ -357,8 +358,7 @@ export default function HomePageClient() {
                       type="date"
                       value={expiryDate}
                       onChange={(event) => setExpiryDate(event.target.value)}
-                      style={{colorScheme: theme}}
-                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900"
+                      className={`min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 ${colorSchemeClass}`}
                     />
                   </div>
                 ) : (
@@ -374,8 +374,7 @@ export default function HomePageClient() {
                       value={expiryDays}
                       onChange={(event) => setExpiryDays(event.target.value)}
                       aria-describedby={"expiry-days-help"}
-                      style={{colorScheme: theme}}
-                      className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900"
+                      className={`min-w-0 flex-1 rounded-full border border-slate-200 bg-white p-4 text-base transition focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-slate-700 dark:bg-slate-900 ${colorSchemeClass}`}
                     />
                     <span id="expiry-days-help" className="shrink-0 text-sm font-medium text-slate-500 dark:text-slate-400">
                       {siteLang === "pl" ? "dni" : "days"}

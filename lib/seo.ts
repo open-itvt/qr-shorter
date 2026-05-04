@@ -1,6 +1,6 @@
 export const siteName = "QR Shorter";
 export const alternateSiteName = "URL Shorter";
-export const siteDescription = "Shorten links, generate QR codes, and track click and scan statistics.";
+export const siteDescription = "Shorten links, generate QR codes, and track click and scan statistics with a fast, privacy-conscious URL shortener.";
 export const siteKeywords = [
   "URL shortener",
   "QR code generator",
@@ -61,8 +61,35 @@ export function getWebsiteJsonLd(baseUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Website",
+    "@id": `${baseUrl}/#website`,
     name: siteName,
     url: baseUrl,
     alternateName: alternateSiteName,
+    description: siteDescription,
+    inLanguage: ["en", "pl"],
+    publisher: {
+      "@id": `${baseUrl}/#organization`,
+    },
+  };
+}
+
+export function getOrganizationJsonLd(baseUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    name: siteName,
+    alternateName: alternateSiteName,
+    url: baseUrl,
+    description: siteDescription,
+    sameAs: [],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        availableLanguage: ["en", "pl"],
+        email: "gdpr@itvt.xyz",
+      },
+    ],
   };
 }
