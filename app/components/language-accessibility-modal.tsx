@@ -252,17 +252,17 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectContrast("default")}
                 aria-pressed={currentContrast === "default"}
-                className="flex min-h-22 flex-col justify-between gap-2.5 rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 px-3.5 py-3.5 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-slate-50 hover:to-slate-100 dark:border-slate-700 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 dark:text-slate-100 sm:min-h-24 sm:px-4 sm:py-4"
+                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-slate-50 hover:to-slate-100 dark:border-slate-700 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 dark:text-slate-100 sm:min-h-22 sm:px-4 sm:py-4"
               >
                 <div className="space-y-1">
-                  <span className="block text-[15px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.contrastDefault}</span>
+                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.contrastDefault}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentContrast === "default" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex h-7 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 dark:border-slate-700 dark:bg-slate-950 sm:h-8 sm:px-3">
-                  <span className="h-4 w-4 rounded-full border border-slate-300 bg-slate-100" />
-                  <span className="h-4 w-4 rounded-full border border-slate-300 bg-slate-500" />
-                  <span className="h-4 w-4 rounded-full border border-slate-300 bg-slate-900" />
-                  <span className="ml-auto text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
+                <div className="flex items-center gap-2">
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-100" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-500" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-900" />
+                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
                 </div>
               </button>
 
@@ -270,17 +270,17 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectContrast("high")}
                 aria-pressed={currentContrast === "high"}
-                className="flex min-h-22 flex-col justify-between gap-2.5 rounded-2xl border border-amber-300 bg-gradient-to-br from-amber-50 via-yellow-100 to-amber-200 px-3.5 py-3.5 text-left text-sm font-semibold text-amber-950 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-amber-100 hover:to-amber-200 dark:border-amber-300/50 dark:bg-gradient-to-br dark:from-amber-300/15 dark:via-yellow-300/10 dark:to-amber-500/15 dark:text-amber-100 sm:min-h-24 sm:px-4 sm:py-4"
+                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-amber-300 bg-gradient-to-br from-amber-50 via-yellow-100 to-amber-200 px-3 py-3 text-left text-sm font-semibold text-amber-950 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-amber-100 hover:to-amber-200 dark:border-amber-300/50 dark:bg-gradient-to-br dark:from-amber-300/15 dark:via-yellow-300/10 dark:to-amber-500/15 dark:text-amber-100 sm:min-h-22 sm:px-4 sm:py-4"
               >
                 <div className="space-y-1">
-                  <span className="block text-[15px] leading-5 text-amber-950 dark:text-amber-100 sm:text-base">{labels.contrastYellow}</span>
+                  <span className="block text-[14px] leading-5 text-amber-950 dark:text-amber-100 sm:text-base">{labels.contrastYellow}</span>
                   <span className="block text-[11px] font-medium leading-4 text-amber-950/75 dark:text-amber-100/80 sm:text-xs">{currentContrast === "high" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex h-7 items-center gap-2 rounded-xl border border-amber-300/60 bg-white/85 px-2.5 dark:border-amber-200/30 dark:bg-black/40 sm:h-8 sm:px-3">
-                  <span className="h-4 w-4 rounded-full border border-amber-400 bg-yellow-300" />
-                  <span className="h-4 w-4 rounded-full border border-slate-900 bg-black" />
-                  <span className="h-4 w-4 rounded-full border border-slate-300 bg-white" />
-                  <span className="ml-auto text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-950/75 dark:text-amber-100/75">Aa</span>
+                <div className="flex items-center gap-2">
+                  <span className="h-3.5 w-3.5 rounded-full border border-amber-400 bg-yellow-300" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-900 bg-black" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-white" />
+                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-950/75 dark:text-amber-100/75">Aa</span>
                 </div>
               </button>
 
@@ -288,17 +288,17 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectContrast("extra")}
                 aria-pressed={currentContrast === "extra"}
-                className="flex min-h-22 flex-col justify-between gap-2.5 rounded-2xl border border-slate-300 bg-gradient-to-br from-black via-slate-950 to-white px-3.5 py-3.5 text-left text-sm font-semibold text-slate-950 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-slate-900 hover:to-slate-100 dark:border-slate-200/40 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-white dark:text-white sm:min-h-24 sm:px-4 sm:py-4"
+                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-300 bg-gradient-to-br from-black via-slate-950 to-white px-3 py-3 text-left text-sm font-semibold text-slate-950 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:from-slate-900 hover:to-slate-100 dark:border-slate-200/40 dark:bg-gradient-to-br dark:from-black dark:via-black dark:to-white dark:text-white sm:min-h-22 sm:px-4 sm:py-4"
               >
                 <div className="space-y-1">
-                  <span className="block text-[15px] leading-5 text-white sm:text-base">{labels.contrastMono}</span>
+                  <span className="block text-[14px] leading-5 text-white sm:text-base">{labels.contrastMono}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-700/80 dark:text-slate-200/80 sm:text-xs">{currentContrast === "extra" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="flex h-7 items-center gap-2 rounded-xl border border-slate-300 bg-white px-2.5 dark:border-white/30 dark:bg-black sm:h-8 sm:px-3">
-                  <span className="h-4 w-4 rounded-full border border-black bg-white" />
-                  <span className="h-4 w-4 rounded-full border border-white bg-black" />
-                  <span className="h-4 w-4 rounded-full border border-slate-400 bg-slate-200" />
-                  <span className="ml-auto text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-700 dark:text-slate-200">Aa</span>
+                <div className="flex items-center gap-2">
+                  <span className="h-3.5 w-3.5 rounded-full border border-black bg-white" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-white bg-black" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-400 bg-slate-200" />
+                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-700 dark:text-slate-200">Aa</span>
                 </div>
               </button>
             </div>
@@ -313,14 +313,17 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectFont("default")}
                 aria-pressed={currentFont === "default"}
-                className="flex min-h-22 flex-col justify-between gap-2.5 rounded-2xl border border-slate-200 bg-white px-3.5 py-3.5 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-24 sm:px-4 sm:py-4"
+                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-22 sm:px-4 sm:py-4"
               >
                 <div className="space-y-1">
-                  <span className="block text-[15px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontDefault}</span>
+                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontDefault}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "default" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-base font-semibold tracking-wide text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:px-3 sm:text-lg" style={{fontFamily: "Inter, system-ui, sans-serif"}}>
-                  Aa Bb 123
+                <div className="flex items-center gap-2">
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-100" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-500" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-900" />
+                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
                 </div>
               </button>
 
@@ -328,14 +331,17 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectFont("readable")}
                 aria-pressed={currentFont === "readable"}
-                className="flex min-h-22 flex-col justify-between gap-2.5 rounded-2xl border border-slate-200 bg-white px-3.5 py-3.5 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-24 sm:px-4 sm:py-4"
+                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-22 sm:px-4 sm:py-4"
               >
                 <div className="space-y-1">
-                  <span className="block text-[15px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontReadable}</span>
+                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontReadable}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "readable" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-amber-50 px-2.5 py-2 text-base font-semibold tracking-wide text-slate-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:px-3 sm:text-lg" style={{fontFamily: "Verdana, Arial, sans-serif"}}>
-                  Aa Bb 123
+                <div className="flex items-center gap-2">
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-amber-100" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-amber-300" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-amber-500" />
+                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
                 </div>
               </button>
 
@@ -343,14 +349,17 @@ export default function LanguageAccessibilityModal({
                 type="button"
                 onClick={() => onSelectFont("serif")}
                 aria-pressed={currentFont === "serif"}
-                className="flex min-h-22 flex-col justify-between gap-2.5 rounded-2xl border border-slate-200 bg-white px-3.5 py-3.5 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-24 sm:px-4 sm:py-4"
+                className="flex min-h-20 flex-col justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-3 text-left text-sm font-semibold text-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:min-h-22 sm:px-4 sm:py-4"
               >
                 <div className="space-y-1">
-                  <span className="block text-[15px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontSerif}</span>
+                  <span className="block text-[14px] leading-5 text-slate-900 dark:text-white sm:text-base">{labels.fontSerif}</span>
                   <span className="block text-[11px] font-medium leading-4 text-slate-500 dark:text-slate-300 sm:text-xs">{currentFont === "serif" ? labels.current : labels.reloadNote}</span>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-base font-semibold tracking-wide text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:px-3 sm:text-lg" style={{fontFamily: "Georgia, Cambria, 'Times New Roman', serif"}}>
-                  Aa Bb 123
+                <div className="flex items-center gap-2">
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-100" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-500" />
+                  <span className="h-3.5 w-3.5 rounded-full border border-slate-300 bg-slate-700" />
+                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Aa</span>
                 </div>
               </button>
             </div>
