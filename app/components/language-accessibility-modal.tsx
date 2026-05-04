@@ -13,6 +13,7 @@ type LanguageAccessibilityModalLabels = {
   chooseLanguage: string;
   chooseContrast: string;
   chooseFont: string;
+  chooseFontSize: string;
   close: string;
   reset: string;
   polish: string;
@@ -290,6 +291,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectContrast("default")}
                   aria-pressed={currentContrast === "default"}
+                  aria-label={labels.contrastDefault}
                   className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "default" ? "border-white bg-slate-800" : "border-slate-700 bg-slate-900"}`}
                   title={labels.contrastDefault}
                 >
@@ -300,6 +302,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectContrast("high")}
                   aria-pressed={currentContrast === "high"}
+                  aria-label={labels.contrastYellow}
                   className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "high" ? "border-amber-300 bg-amber-400" : "border-amber-300 bg-amber-50/0"}`}
                   title={labels.contrastYellow}
                 >
@@ -310,6 +313,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectContrast("extra")}
                   aria-pressed={currentContrast === "extra"}
+                  aria-label={labels.contrastMono}
                   className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "extra" ? "border-white bg-black" : "border-slate-700 bg-slate-900"}`}
                   title={labels.contrastMono}
                 >
@@ -351,7 +355,7 @@ export default function LanguageAccessibilityModal({
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">Select font size</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseFontSize}</h3>
               <div className="flex items-center gap-4">
                 <button
                   type="button"

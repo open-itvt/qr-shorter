@@ -23,6 +23,7 @@ const englishLabels = {
     chooseLanguage: "Choose interface language",
     chooseContrast: "Choose contrast mode",
     chooseFont: "Choose font style",
+    chooseFontSize: "Choose font size",
     close: "Close language dialog",
     reset: "Reset accessibility settings",
     polish: "Polish",
