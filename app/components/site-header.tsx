@@ -18,6 +18,24 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     return preferred === "dark" ? "dark" : "light";
   });
 
+  const [lang, setLang] = useState<"pl" | "en">(() => {
+    if (typeof window === "undefined") return "pl";
+    try {
+      const stored = localStorage.getItem("site-language");
+      if (stored === "pl" || stored === "en") return stored;
+    } catch {}
+    return navigator.language?.startsWith("pl") ? "pl" : "en";
+  });
+
+  useEffect(() => {
+    try {
+      document.documentElement.lang = lang;
+    } catch {}
+    try {
+      localStorage.setItem("site-language", lang);
+    } catch {}
+  }, [lang]);
+
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
@@ -34,12 +52,31 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
       </Link>
       <div className="flex items-center gap-2 sm:gap-3">
         {showHistoryLink ? (
-          <Link
-            href="/history"
-            aria-label="Open history"
-            title="Open history"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/35 bg-primary/10 text-primary transition hover:bg-primary/20 dark:border-primary/45"
-          >
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                const next = lang === "pl" ? "en" : "pl";
+                setLang(next);
+                try {
+                  localStorage.setItem("site-language", next);
+                } catch {}
+                // reload to ensure single-language rendering across app
+                window.location.reload();
+              }}
+              aria-label={lang === "pl" ? "Przełącz na angielski" : "Switch to Polish"}
+              title={lang === "pl" ? "PL" : "EN"}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            >
+              {lang === "pl" ? "PL" : "EN"}
+            </button>
+
+            <Link
+              href="/history"
+              aria-label={lang === "pl" ? "Otwórz historię" : "Open history"}
+              title={lang === "pl" ? "Historia" : "History"}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/35 bg-primary/10 text-primary transition hover:bg-primary/20 dark:border-primary/45"
+            >
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -55,6 +92,7 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
               <path d="M12 7v5l3 3" />
             </svg>
           </Link>
+          </>
         ) : null}
         <button
           type="button"
@@ -67,3 +105,4 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     </header>
   );
 }
+
