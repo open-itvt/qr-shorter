@@ -77,6 +77,13 @@ export default function HomePageClient() {
   });
   const [result, setResult] = useState<ApiResult | null>(null);
   const [stats, setStats] = useState<StatsResult | null>(null);
+  const [siteLang] = useState<"en" | "pl">(() => {
+    try {
+      const stored = localStorage.getItem("site-language");
+      if (stored === "pl" || stored === "en") return stored as "pl" | "en";
+    } catch {}
+    return "en";
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
@@ -223,7 +230,7 @@ export default function HomePageClient() {
               <input
                 type="url"
                 required
-                placeholder="Wrzuć długi link, aby go skrócić..."
+                placeholder={siteLang === "pl" ? "Wrzuć długi link, aby go skrócić..." : "Paste long URL to shorten..."}
                 autoComplete="url"
                 autoCorrect="off"
                 spellCheck={false}
@@ -236,14 +243,16 @@ export default function HomePageClient() {
                 disabled={isLoading}
                 className="mt-2 h-12 w-full rounded-full bg-primary px-6 text-base font-semibold text-white shadow-lg shadow-green-500/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:mt-0 sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
               >
-                {isLoading ? "Skracam..." : "Skróć link"}
+                {isLoading ? (siteLang === "pl" ? "Skracam..." : "Shortening...") : (siteLang === "pl" ? "Skróć link" : "Shorten")}
               </button>
             </div>
 
             {error ? (
               <p className="text-left text-sm font-medium text-red-500">
                 {retryAfter
-                  ? `Error: Przekroczono limit. Spróbuj ponownie za ${retryAfter >= 60 ? `${Math.floor((retryAfter ?? 0) / 60)}m` : `${retryAfter}s`}.`
+                  ? siteLang === "pl"
+                    ? `Przekroczono limit. Spróbuj ponownie za ${retryAfter >= 60 ? `${Math.floor((retryAfter ?? 0) / 60)}m` : `${retryAfter}s`}.`
+                    : `Rate limit exceeded. Try again in ${retryAfter >= 60 ? `${Math.floor((retryAfter ?? 0) / 60)}m` : `${retryAfter}s`}.`
                   : error}
               </p>
             ) : null}
@@ -252,13 +261,13 @@ export default function HomePageClient() {
               id="content-options"
               className={isOtherFunctionsOpen ? "mt-3 flex w-full max-w-3xl flex-col items-center rounded-3xl border border-slate-200 bg-surface p-4 text-center dark:border-slate-700" : "hidden"}
             >
-              <h2 className="mb-4 text-center text-xl font-bold">Więcej funkcji</h2>
+              <h2 className="mb-4 text-center text-xl font-bold">{siteLang === "pl" ? "Więcej funkcji" : "More functions"}</h2>
 
               <div
                 className="mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
                 style={{fontFamily: "Roboto, sans-serif"}}
               >
-                Własny adres URL (min. 5 znaków, max. 30)
+                {siteLang === "pl" ? "Własny adres URL (min. 5 znaków, max. 30)" : "Custom URL (min. 5 chars, max. 30)"}
               </div>
 
               <div className="flex w-full max-w-md items-center justify-center gap-2">
@@ -267,7 +276,7 @@ export default function HomePageClient() {
                 </label>
                 <input
                   type="text"
-                  placeholder="wlasny_url"
+                  placeholder={siteLang === "pl" ? "wlasny_url" : "custom_url"}
                   minLength={5}
                   maxLength={30}
                   style={{colorScheme: theme}}
@@ -281,7 +290,7 @@ export default function HomePageClient() {
                 className="mt-4 mb-2 text-base font-bold tracking-wide text-slate-500 dark:text-slate-400"
                 style={{fontFamily: "Roboto, sans-serif"}}
               >
-                Ograniczenia czasowe
+                {siteLang === "pl" ? "Ograniczenia czasowe" : "Expiry options"}
               </div>
 
               <div className="flex flex-col justify-center items-center w-full max-w-md rounded-2xl border border-slate-200 bg-white/70 p-3 dark:border-slate-700 dark:bg-slate-900/60">
@@ -291,21 +300,21 @@ export default function HomePageClient() {
                     onClick={() => setExpiryMode("none")}
                     className={`rounded-full px-3 py-2 transition ${expiryMode === "none" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
                   >
-                    Bez limitu
+                    {siteLang === "pl" ? "Bez limitu" : "None"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setExpiryMode("date")}
                     className={`rounded-full px-3 py-2 transition ${expiryMode === "date" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
                   >
-                    Data
+                    {siteLang === "pl" ? "Data" : "Date"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setExpiryMode("days")}
                     className={`rounded-full px-3 py-2 transition ${expiryMode === "days" ? "bg-primary text-white" : "border border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-300"}`}
                   >
-                    Dni
+                    {siteLang === "pl" ? "Dni" : "Days"}
                   </button>
                 </div>
 
