@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type LocalizedProps = {
   en: string;
   pl: string;
-  tag?: keyof JSX.IntrinsicElements;
+  tag?: keyof React.JSX.IntrinsicElements;
   className?: string;
 };
 
@@ -16,7 +16,7 @@ export default function Localized({ en, pl, tag = "span", className }: Localized
     try {
       const stored = localStorage.getItem("site-language");
       if (stored === "pl" || stored === "en") {
-        setLang(stored);
+        setLang(stored as "en" | "pl");
         return;
       }
     } catch {}
@@ -24,6 +24,5 @@ export default function Localized({ en, pl, tag = "span", className }: Localized
   }, []);
 
   const text = lang === "pl" ? pl : en;
-  // @ts-ignore create element for given tag
-  return React.createElement(tag, { className }, text);
+  return React.createElement(tag as any, { className }, text);
 }
