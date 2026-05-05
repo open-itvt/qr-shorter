@@ -48,7 +48,7 @@ const focusableSelector =
 
 function TinyContrastIcon({ mode }: { mode: ContrastMode }) {
   return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" className="h-6 w-6 shrink-0" fill="#ffffff" stroke="#ffffff">
+    <svg viewBox="0 0 48 48" aria-hidden="true" className="h-6 w-6 shrink-0" fill="currentColor" stroke="currentColor">
       <g id="SVGRepo_bgCarrier" strokeWidth="0" />
       <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
       <g id="SVGRepo_iconCarrier">
@@ -235,20 +235,20 @@ export default function LanguageAccessibilityModal({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}
-        className="relative z-10 w-full max-w-4xl transform overflow-hidden rounded-3xl border border-slate-700 bg-slate-950 p-6 text-left shadow-2xl sm:p-8"
+        className="relative z-10 w-full max-w-4xl transform overflow-hidden rounded-3xl border border-slate-200 bg-surface p-6 text-left shadow-2xl sm:p-8 dark:border-slate-700"
       >
         <div className="flex items-start justify-between">
           <div className="max-w-[70%]">
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-400">{labels.chooseLanguage}</p>
-            <h2 id={titleId} className="text-3xl font-bold leading-tight text-white">{labels.title}</h2>
-            <p id={descriptionId} className="mt-3 text-sm text-slate-300">{labels.description}</p>
+            <h2 id={titleId} className="text-3xl font-bold leading-tight text-foreground">{labels.title}</h2>
+            <p id={descriptionId} className="mt-3 text-sm text-muted">{labels.description}</p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
             aria-label={labels.close}
-            className="ml-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-400"
+            className="ml-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-surface text-muted hover:bg-surface/95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-400 dark:border-slate-700"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor">
               <path d="M18 6 6 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -260,39 +260,39 @@ export default function LanguageAccessibilityModal({
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <div className="space-y-6">
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseLanguage}</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{labels.chooseLanguage}</h3>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => onSelectLanguage("pl")}
                   aria-pressed={currentLanguage === "pl"}
-                  className={`flex-1 rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${currentLanguage === "pl" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${currentLanguage === "pl" ? "bg-primary text-white border-primary" : "bg-transparent text-foreground border border-slate-200 dark:border-slate-700"}`}
                 >
                   <div className="mb-1 text-base">{labels.polish}</div>
-                  <div className="text-xs text-slate-400">{currentLanguage === "pl" ? labels.currentLanguage : labels.reloadNote}</div>
+                  <div className="text-xs text-muted">{currentLanguage === "pl" ? labels.currentLanguage : labels.reloadNote}</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onSelectLanguage("en")}
                   aria-pressed={currentLanguage === "en"}
-                  className={`flex-1 rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${currentLanguage === "en" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-left text-sm font-semibold transition ${currentLanguage === "en" ? "bg-primary text-white border-primary" : "bg-transparent text-foreground border border-slate-200 dark:border-slate-700"}`}
                 >
                   <div className="mb-1 text-base">{labels.english}</div>
-                  <div className="text-xs text-slate-400">{currentLanguage === "en" ? labels.currentLanguage : labels.reloadNote}</div>
+                  <div className="text-xs text-muted">{currentLanguage === "en" ? labels.currentLanguage : labels.reloadNote}</div>
                 </button>
               </div>
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseContrast}</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{labels.chooseContrast}</h3>
               <div className="flex items-center gap-4">
                 <button
                   type="button"
                   onClick={() => onSelectContrast("default")}
                   aria-pressed={currentContrast === "default"}
                   aria-label={labels.contrastDefault}
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "default" ? "border-white bg-slate-800" : "border-slate-700 bg-slate-900"}`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "default" ? "border-primary bg-primary text-white" : "border border-slate-200 bg-surface text-foreground dark:border-slate-700"}`}
                   title={labels.contrastDefault}
                 >
                   <TinyContrastIcon mode="default" />
@@ -303,7 +303,7 @@ export default function LanguageAccessibilityModal({
                   onClick={() => onSelectContrast("high")}
                   aria-pressed={currentContrast === "high"}
                   aria-label={labels.contrastYellow}
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "high" ? "border-amber-300 bg-amber-400" : "border-amber-300 bg-amber-50/0"}`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "high" ? "border-amber-300 bg-amber-400 text-black" : "border-amber-300 bg-amber-50/0 text-foreground"}`}
                   title={labels.contrastYellow}
                 >
                   <TinyContrastIcon mode="high" />
@@ -314,7 +314,7 @@ export default function LanguageAccessibilityModal({
                   onClick={() => onSelectContrast("extra")}
                   aria-pressed={currentContrast === "extra"}
                   aria-label={labels.contrastMono}
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "extra" ? "border-white bg-black" : "border-slate-700 bg-slate-900"}`}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full border ${currentContrast === "extra" ? "border-white bg-black text-white" : "border border-slate-200 bg-surface text-foreground dark:border-slate-700"}`}
                   title={labels.contrastMono}
                 >
                   <TinyContrastIcon mode="extra" />
@@ -325,13 +325,13 @@ export default function LanguageAccessibilityModal({
 
           <div className="space-y-6">
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseFont}</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{labels.chooseFont}</h3>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => onSelectFont("default")}
                   aria-pressed={currentFont === "default"}
-                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "default" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "default" ? "bg-primary text-white border-primary" : "bg-transparent text-foreground border border-slate-200 dark:border-slate-700"}`}
                 >
                   {labels.fontDefault}
                 </button>
@@ -339,7 +339,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectFont("readable")}
                   aria-pressed={currentFont === "readable"}
-                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "readable" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "readable" ? "bg-primary text-white border-primary" : "bg-transparent text-foreground border border-slate-200 dark:border-slate-700"}`}
                 >
                   {labels.fontReadable}
                 </button>
@@ -347,7 +347,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectFont("serif")}
                   aria-pressed={currentFont === "serif"}
-                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "serif" ? "bg-slate-800 text-white border-white/10" : "bg-transparent text-slate-200 border border-slate-700"}`}
+                  className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium ${currentFont === "serif" ? "bg-primary text-white border-primary" : "bg-transparent text-foreground border border-slate-200 dark:border-slate-700"}`}
                 >
                   {labels.fontSerif}
                 </button>
@@ -355,14 +355,14 @@ export default function LanguageAccessibilityModal({
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">{labels.chooseFontSize}</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{labels.chooseFontSize}</h3>
               <div className="flex items-center gap-4">
                 <button
                   type="button"
                   onClick={() => onSelectFontSize(100)}
                   aria-pressed={currentFontSize === 100}
                   aria-label="Reset font size to 100%"
-                  className={`rounded text-2xl transition ${currentFontSize === 100 ? "text-white" : "text-slate-200 hover:text-white"}`}
+                  className={`rounded text-2xl transition ${currentFontSize === 100 ? "text-primary" : "text-muted hover:text-primary"}`}
                 >
                   Aa
                 </button>
@@ -370,7 +370,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectFontSize(Math.min(200, currentFontSize + 10))}
                   aria-label="Increase font size by 10%"
-                  className="rounded text-3xl font-bold text-slate-200 transition hover:text-white"
+                  className="rounded text-3xl font-bold text-muted transition hover:text-primary"
                 >
                   A+
                 </button>
@@ -378,7 +378,7 @@ export default function LanguageAccessibilityModal({
                   type="button"
                   onClick={() => onSelectFontSize(Math.max(80, currentFontSize - 10))}
                   aria-label="Decrease font size by 10%"
-                  className="rounded text-xl text-slate-200 transition hover:text-white"
+                  className="rounded text-xl text-muted transition hover:text-primary"
                 >
                   A-
                 </button>
