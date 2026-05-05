@@ -118,6 +118,33 @@ html {
     @apply text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400;
     margin: 0 0 0.5rem 0;
   }
+
+  /* Contrast fixes for light and dark modes (no commit requested) */
+  header a.text-3xl {
+    color: #0F766E; /* darker primary for sufficient contrast on light bg */
+  }
+
+  .dark header a.text-3xl {
+    color: var(--primary); /* use theme primary in dark mode (already suitable) */
+  }
+
+  h1 > .text-primary,
+  h1 .text-primary {
+    color: #0F766E; /* hero emphasized span - darker on light bg */
+  }
+
+  .dark h1 > .text-primary,
+  .dark h1 .text-primary {
+    color: var(--primary); /* in dark mode keep primary variable (contrasts OK on dark surface) */
+  }
+
+  .heading-subtitle {
+    color: #475569; /* stronger muted on light bg */
+  }
+
+  .dark .heading-subtitle {
+    color: #CBD5E1; /* lighter muted in dark mode to meet contrast */
+  }
 }
 
 /* Responsywność: mniejsze rozmiary nagłówków na małych ekranach */
