@@ -54,7 +54,13 @@ function TinyContrastIcon({ mode }: { mode: ContrastMode }) {
       <g id="SVGRepo_iconCarrier">
         <title>palette</title>
         <g id="Layer_2" data-name="Layer 2">
-          <g id="invisible_box" data-name="invisible box" aria-hidden="true" style={{ display: "none" }}>
+          <g
+            id="invisible_box"
+            data-name="invisible box"
+            role="img"
+            aria-label="Invisible box for layout"
+            style={{ opacity: 0, pointerEvents: "none" }}
+          >
             <rect width="48" height="48" fill="none" stroke="none" />
           </g>
           <g id="icons_Q2" data-name="icons Q2">
