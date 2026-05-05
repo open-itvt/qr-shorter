@@ -220,7 +220,7 @@ export default function HomePageClient() {
 
       <main className="mx-auto flex w-full max-w-4xl flex-col items-center gap-8 px-4 pb-16 pt-4 text-center sm:gap-10 sm:px-6 sm:pb-20 sm:pt-8">
         <div className="space-y-4 sm:space-y-6">
-          <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
+          <h1 className="text-[2.0625rem] font-extrabold leading-tight sm:text-[3.375rem]">
             {siteLang === "pl" ? (
               <>
                 <span className="text-primary">Skracaj linki</span>, generuj kody QR i śledź statystyki
