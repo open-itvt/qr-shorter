@@ -231,11 +231,11 @@ export default function HomePageClient() {
               </>
             )}
           </h1>
-          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+          <h2 className="heading-subtitle text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
             {siteLang === "pl"
               ? "Skracacz URL, kody QR i statystyki linków"
               : "URL shortener, QR codes, and link statistics"}
-          </h3>
+          </h2>
           <p className="mx-auto max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-9">
             {/* Localized paragraph */}
             <Localized

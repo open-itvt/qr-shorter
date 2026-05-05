@@ -7,6 +7,8 @@
   --foreground: #0f172a;
   --muted: #475569;
   --primary: #25af74;
+  --badge-bg: #eef2f7;
+  --badge-fg: #334155;
 }
 
 @theme inline {
@@ -76,4 +78,51 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Headings: zgodne z Tailwind (layer base) i komponent badge (layer components) */
+@layer base {
+  h1, h2, h3 {
+    color: var(--foreground);
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+  }
+
+  h1 {
+    @apply text-2xl font-extrabold; /* ~2rem */
+    margin: 0 0 1rem 0;
+  }
+
+  h2 {
+    @apply text-xl font-extrabold; /* ~1.25-1.5rem */
+    margin: 1.25rem 0 0.6rem 0;
+  }
+
+  h3 {
+    @apply text-lg font-semibold; /* ~1.125rem */
+    margin: 1rem 0 0.5rem 0;
+  }
+}
+
+@layer components {
+  .heading-badge {
+    @apply inline-block rounded-full font-semibold text-sm align-middle px-3 py-0.5;
+    background: var(--badge-bg);
+    color: var(--badge-fg);
+    margin-right: 0.5rem;
+  }
+  /* Subtitle style used for small uppercase headings under the main title */
+  .heading-subtitle {
+    @apply text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400;
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+/* Responsywność: mniejsze rozmiary nagłówków na małych ekranach */
+@media (max-width: 640px) {
+  h1 { @apply text-xl; }
+  h2 { @apply text-lg; }
+  h3 { @apply text-base; }
 }
