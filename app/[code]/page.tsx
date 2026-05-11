@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { isLinkExpired, storage } from "@/lib/storage";
 import AutoRedirect from "@/app/components/auto-redirect";
+import SiteHeader from "@/app/components/site-header";
 import { getSeoBaseUrl, siteName } from "@/lib/seo";
+import { isLinkExpired, storage } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
@@ -90,23 +91,12 @@ export default async function ShortCodePage({
   });
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-4 py-12 text-center">
-      {/* The metadata above is used by crawlers and social previews; browsers redirect immediately. */}
-      <AutoRedirect targetUrl={link.url} lang={lang} />
-
-      <div className="space-y-4 rounded-3xl border border-slate-200 bg-surface p-6 shadow-sm dark:border-slate-700">
-        <h1 className="text-3xl font-extrabold text-primary sm:text-4xl">URL Shorter</h1>
-        <p className="text-base text-muted">{lang === "pl" ? "Przekierowujemy do docelowej strony." : "Redirecting you to the target page."}</p>
-        <p className="break-all text-sm text-muted">
-          {lang === "pl"
-            ? "Jeśli przekierowanie nie nastąpi automatycznie, otwórz"
-            : "If the redirect does not happen automatically, open"}{" "}
-          <a className="text-primary underline" href={link.url}>
-            {link.url}
-          </a>
-          .
-        </p>
-      </div>
-    </main>
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader showHistoryLink={false} />
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-12 text-center">
+        {/* The metadata above is used by crawlers and social previews; browsers redirect immediately. */}
+        <AutoRedirect targetUrl={link.url} lang={lang} />
+      </main>
+    </div>
   );
 }

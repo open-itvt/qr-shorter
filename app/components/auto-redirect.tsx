@@ -2,6 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 
+const REDIRECT_NOTIFICATIONS_STORAGE_KEY = "redirect-notifications";
+const REDIRECT_NOTIFICATIONS_CHANGE_EVENT = "redirect-notifications-change";
+
 type AutoRedirectProps = {
   targetUrl: string;
   delaySeconds?: number;
@@ -11,6 +14,17 @@ type AutoRedirectProps = {
 export default function AutoRedirect({ targetUrl, delaySeconds = 5, lang = "en" }: AutoRedirectProps) {
   const [countdown, setCountdown] = useState(delaySeconds);
   const [cancelled, setCancelled] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    if (typeof window === "undefined") {
+      return true;
+    }
+
+    try {
+      return localStorage.getItem(REDIRECT_NOTIFICATIONS_STORAGE_KEY) !== "false";
+    } catch {
+      return true;
+    }
+  });
   const announcerRef = useRef<HTMLDivElement | null>(null);
 
   const copy = {
@@ -19,11 +33,47 @@ export default function AutoRedirect({ targetUrl, delaySeconds = 5, lang = "en" 
     fallback: lang === "pl" ? "Jeśli przekierowanie nie nastąpi automatycznie, użyj linku poniżej." : "If redirect does not happen automatically, use the link below.",
     proceed: lang === "pl" ? "Przejdź teraz" : "Proceed now",
     stay: lang === "pl" ? "Zostań na tej stronie" : "Stay on this page",
+    disableNotifications: lang === "pl" ? "Wyłącz powiadomienia" : "Disable notifications",
+    enableNotifications: lang === "pl" ? "Włącz powiadomienia" : "Enable notifications",
+    notificationsDisabled: lang === "pl" ? "Powiadomienia o przekierowaniu są wyłączone." : "Redirect notifications are off.",
     cancelled: lang === "pl" ? "Przekierowanie wstrzymane." : "Redirect paused.",
     announce: (seconds: number) => (lang === "pl" ? `Przekierowanie nastąpi za ${seconds} s.` : `Redirecting in ${seconds} seconds.`),
   };
 
   useEffect(() => {
+    const syncPreference = () => {
+      try {
+        setNotificationsEnabled(localStorage.getItem(REDIRECT_NOTIFICATIONS_STORAGE_KEY) !== "false");
+      } catch {
+        setNotificationsEnabled(true);
+      }
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === REDIRECT_NOTIFICATIONS_STORAGE_KEY) {
+        syncPreference();
+      }
+    };
+
+    const handleCustomChange = () => syncPreference();
+
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener(REDIRECT_NOTIFICATIONS_CHANGE_EVENT, handleCustomChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener(REDIRECT_NOTIFICATIONS_CHANGE_EVENT, handleCustomChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!notificationsEnabled) {
+      try {
+        window.location.replace(targetUrl);
+      } catch {}
+      return;
+    }
+
     if (cancelled) return;
     if (countdown <= 0) {
       try {
@@ -37,22 +87,44 @@ export default function AutoRedirect({ targetUrl, delaySeconds = 5, lang = "en" 
 
   useEffect(() => {
     if (announcerRef.current) {
+      if (!notificationsEnabled) {
+        announcerRef.current.textContent = copy.notificationsDisabled;
+        return;
+      }
+
       announcerRef.current.textContent = countdown > 0 ? copy.announce(countdown) : copy.description;
     }
-  }, [countdown, copy.description]);
+  }, [countdown, copy.description, copy.notificationsDisabled, notificationsEnabled]);
+
+  const updateNotificationsEnabled = (nextEnabled: boolean) => {
+    setNotificationsEnabled(nextEnabled);
+
+    try {
+      localStorage.setItem(REDIRECT_NOTIFICATIONS_STORAGE_KEY, String(nextEnabled));
+    } catch {}
+
+    window.dispatchEvent(new Event(REDIRECT_NOTIFICATIONS_CHANGE_EVENT));
+  };
+
+  if (!notificationsEnabled) {
+    return null;
+  }
 
   return (
     <div role="region" aria-label={copy.title} className="w-full">
       <div className="space-y-4 rounded-3xl border border-slate-200 bg-surface p-6 shadow-sm dark:border-slate-700">
         <h1 className="text-3xl font-extrabold text-primary sm:text-4xl">URL Shorter</h1>
-        <p className="text-base text-muted">{cancelled ? copy.cancelled : copy.description}</p>
-        <p className="break-all text-sm text-muted">
-          {copy.fallback}{" "}
-          <a className="text-primary underline" href={targetUrl}>
-            {targetUrl}
-          </a>
-          .
-        </p>
+        <p className="text-base text-muted">{cancelled ? copy.cancelled : notificationsEnabled ? copy.description : copy.notificationsDisabled}</p>
+
+        {notificationsEnabled ? (
+          <p className="break-all text-sm text-muted">
+            {copy.fallback} {" "}
+            <a className="text-primary underline" href={targetUrl}>
+              {targetUrl}
+            </a>
+            .
+          </p>
+        ) : null}
 
         <div className="flex items-center gap-3">
           <button
@@ -73,6 +145,21 @@ export default function AutoRedirect({ targetUrl, delaySeconds = 5, lang = "en" 
           >
             {copy.stay}
           </button>
+          <button
+            type="button"
+            onClick={() => updateNotificationsEnabled(!notificationsEnabled)}
+            role="switch"
+            aria-checked={notificationsEnabled}
+            aria-label={copy.disableNotifications}
+            className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${notificationsEnabled ? "border-emerald-500 bg-emerald-500" : "border-red-500 bg-red-500"}`}
+          >
+            <span
+              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${notificationsEnabled ? "translate-x-7" : "translate-x-1"}`}
+            />
+          </button>
+          <span className="text-sm font-semibold text-muted">
+            {notificationsEnabled ? copy.disableNotifications : copy.enableNotifications}
+          </span>
           <div className="sr-only" role="status" aria-live="polite" ref={announcerRef}></div>
         </div>
       </div>
