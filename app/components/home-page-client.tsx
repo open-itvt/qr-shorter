@@ -231,7 +231,7 @@ export default function HomePageClient() {
               </>
             )}
           </h1>
-          <h2 className="heading-subtitle text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+          <h2 className="heading-subtitle hidden text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 md:block">
             {siteLang === "pl"
               ? "Skracacz URL, kody QR i statystyki linków"
               : "URL shortener, QR codes, and link statistics"}
