@@ -14,6 +14,10 @@ type LanguageAccessibilityModalLabels = {
   chooseContrast: string;
   chooseFont: string;
   chooseFontSize: string;
+  redirectNotifications: string;
+  redirectNotificationsDescription: string;
+  disableNotifications: string;
+  enableNotifications: string;
   close: string;
   reset: string;
   polish: string;
@@ -35,12 +39,14 @@ type LanguageAccessibilityModalProps = {
   currentContrast: ContrastMode;
   currentFont: FontMode;
   currentFontSize: number;
+  currentNotificationsEnabled: boolean;
   labels: LanguageAccessibilityModalLabels;
   onClose: () => void;
   onSelectLanguage: (language: LanguageCode) => void;
   onSelectContrast: (contrast: ContrastMode) => void;
   onSelectFont: (font: FontMode) => void;
   onSelectFontSize: (fontSize: number) => void;
+  onToggleNotifications: () => void;
 };
 
 const focusableSelector =
@@ -112,12 +118,14 @@ export default function LanguageAccessibilityModal({
   currentContrast,
   currentFont,
   currentFontSize,
+  currentNotificationsEnabled,
   labels,
   onClose,
   onSelectLanguage,
   onSelectContrast,
   onSelectFont,
   onSelectFontSize,
+  onToggleNotifications,
 }: LanguageAccessibilityModalProps) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -391,18 +399,38 @@ export default function LanguageAccessibilityModal({
               </div>
             </div>
 
-            <div className="mt-2 flex items-center justify-between border-t border-slate-800 pt-4">
-              <div className="text-sm text-slate-400" />
-              <button
-                type="button"
-                onClick={() => {
-                  onSelectContrast("default");
-                  onSelectFont("default");
-                }}
-                className="ml-4 rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
-              >
-                {labels.reset}
-              </button>
+            <div className="mt-2 flex flex-col gap-3 border-t border-slate-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1 text-sm text-slate-400">
+                <p className="font-semibold text-foreground">{labels.redirectNotifications}</p>
+                <p>{labels.redirectNotificationsDescription}</p>
+              </div>
+              <div className="flex flex-col gap-3 sm:items-end">
+                <button
+                  type="button"
+                  onClick={onToggleNotifications}
+                  role="switch"
+                  aria-checked={currentNotificationsEnabled}
+                  aria-label={labels.redirectNotifications}
+                  className={`relative inline-flex h-8 w-14 items-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${currentNotificationsEnabled ? "border-emerald-500 bg-emerald-500" : "border-red-500 bg-red-500"}`}
+                >
+                  <span
+                    className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${currentNotificationsEnabled ? "translate-x-7" : "translate-x-1"}`}
+                  />
+                </button>
+                <p className="text-xs font-medium text-muted sm:text-right">
+                  {currentNotificationsEnabled ? labels.disableNotifications : labels.enableNotifications}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onSelectContrast("default");
+                    onSelectFont("default");
+                  }}
+                  className="rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
+                >
+                  {labels.reset}
+                </button>
+              </div>
             </div>
           </div>
         </div>

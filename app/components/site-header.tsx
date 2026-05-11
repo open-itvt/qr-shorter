@@ -24,6 +24,10 @@ const englishLabels = {
     chooseContrast: "Choose contrast mode",
     chooseFont: "Choose font style",
     chooseFontSize: "Choose font size",
+    redirectNotifications: "Redirect notifications",
+    redirectNotificationsDescription: "Show the redirect notice on short-link pages.",
+    disableNotifications: "Disable notifications",
+    enableNotifications: "Enable notifications",
     close: "Close language dialog",
     reset: "Reset accessibility settings",
     polish: "Polish",
@@ -93,6 +97,16 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     return 100;
   });
 
+  const [redirectNotificationsEnabled, setRedirectNotificationsEnabled] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+
+    try {
+      return localStorage.getItem("redirect-notifications") !== "false";
+    } catch {
+      return true;
+    }
+  });
+
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
   useEffect(() => {
@@ -141,6 +155,14 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
     localStorage.setItem("font-size", String(clampedFontSize));
   }, [fontSize]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem("redirect-notifications", String(redirectNotificationsEnabled));
+    } catch {}
+
+    window.dispatchEvent(new Event("redirect-notifications-change"));
+  }, [redirectNotificationsEnabled]);
+
   const toggleTheme = () => {
     setTheme((current) => (current === "light" ? "dark" : "light"));
   };
@@ -170,6 +192,10 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
 
   const applyFontSize = (next: number) => {
     setFontSize(Math.min(200, Math.max(80, next)));
+  };
+
+  const toggleRedirectNotifications = () => {
+    setRedirectNotificationsEnabled((current) => !current);
   };
 
   return (
@@ -248,12 +274,14 @@ export default function SiteHeader({ showHistoryLink = true }: SiteHeaderProps) 
         currentContrast={contrast}
         currentFont={font}
         currentFontSize={fontSize}
+        currentNotificationsEnabled={redirectNotificationsEnabled}
         labels={labels.accessibility}
         onClose={() => setIsLanguageModalOpen(false)}
         onSelectLanguage={applyLanguage}
         onSelectContrast={applyContrast}
         onSelectFont={applyFont}
         onSelectFontSize={applyFontSize}
+        onToggleNotifications={toggleRedirectNotifications}
       />
     </>
   );
