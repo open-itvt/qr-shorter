@@ -14,6 +14,7 @@ type LinkRecord = {
   totalClicks: number;
   qrScans: number;
   expiresAt: string | null;
+  message: string | null;
 };
 
 type LinkEvent = {
@@ -28,6 +29,12 @@ type LinkStats = LinkRecord & {
   recentEvents: LinkEvent[];
 };
 
+type CreateShortLinkOptions = {
+  code?: string | null;
+  expiresAt?: string | null;
+  message?: string | null;
+};
+
 type HistoryRecord = {
   publicId: string;
   code: string;
@@ -37,11 +44,6 @@ type HistoryRecord = {
   totalClicks: number;
   qrScans: number;
   expiresAt: string | null;
-};
-
-type CreateShortLinkOptions = {
-  code?: string | null;
-  expiresAt?: string | null;
 };
 
 interface StorageEngine {
@@ -69,6 +71,7 @@ function normalizeRow(row: {
   total_clicks: number;
   qr_scans: number;
   expires_at: string | null;
+  message: string | null;
 }): LinkRecord {
   return {
     code: row.code,
@@ -79,6 +82,7 @@ function normalizeRow(row: {
     totalClicks: Number(row.total_clicks ?? 0),
     qrScans: Number(row.qr_scans ?? 0),
     expiresAt: row.expires_at,
+    message: row.message,
   };
 }
 
@@ -149,7 +153,8 @@ class SqliteStorage implements StorageEngine {
         last_accessed_at TEXT,
         total_clicks INTEGER NOT NULL DEFAULT 0,
         qr_scans INTEGER NOT NULL DEFAULT 0,
-        expires_at TEXT
+        expires_at TEXT,
+        message TEXT
       );
 
       CREATE TABLE IF NOT EXISTS events (
@@ -189,6 +194,11 @@ class SqliteStorage implements StorageEngine {
       this.db.exec("ALTER TABLE links ADD COLUMN expires_at TEXT");
     }
 
+    const hasMessage = columns.some((column) => column.name === "message");
+    if (!hasMessage) {
+      this.db.exec("ALTER TABLE links ADD COLUMN message TEXT");
+    }
+
     this.db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_links_public_id ON links (public_id)");
     this.db.exec("CREATE INDEX IF NOT EXISTS idx_links_url ON links (url)");
 
@@ -218,11 +228,11 @@ class SqliteStorage implements StorageEngine {
     const publicId = randomUUID();
     const customCode = normalizeCustomCode(options.code);
     const expiresAt = normalizeExpiresAt(options.expiresAt);
-    const wantsDedicatedLink = customCode !== null || expiresAt !== null;
+    const wantsDedicatedLink = customCode !== null || expiresAt !== null || (options.message != null && options.message.length > 0);
 
     const existing = this.db
       .prepare(
-        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE url = ? AND (expires_at IS NULL OR expires_at > ?) ORDER BY created_at ASC LIMIT 1",
+        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at, message FROM links WHERE url = ? AND (expires_at IS NULL OR expires_at > ?) ORDER BY created_at ASC LIMIT 1",
       )
       .get(url, now) as
       | {
@@ -234,6 +244,7 @@ class SqliteStorage implements StorageEngine {
           total_clicks: number;
           qr_scans: number;
           expires_at: string | null;
+          message: string | null;
         }
       | undefined;
 
@@ -250,25 +261,26 @@ class SqliteStorage implements StorageEngine {
         const code = customCode ?? createCode();
         const canonicalPublicId = randomUUID();
         try {
-          this.db
+this.db
             .prepare(
-              "INSERT INTO links (code, public_id, url, created_at, total_clicks, qr_scans, expires_at) VALUES (?, ?, ?, ?, 0, 0, ?)",
+              "INSERT INTO links (code, public_id, url, created_at, total_clicks, qr_scans, expires_at, message) VALUES (?, ?, ?, ?, 0, 0, ?, ?)",
             )
-            .run(code, canonicalPublicId, url, now, expiresAt);
+            .run(code, canonicalPublicId, url, now, expiresAt, options.message ?? null);
           row = this.db
             .prepare(
-              "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE code = ?",
+              "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at, message FROM links WHERE code = ?",
             )
             .get(code) as {
-            code: string;
-            public_id: string;
-            url: string;
-            created_at: string;
-            last_accessed_at: string | null;
-            total_clicks: number;
-            qr_scans: number;
-            expires_at: string | null;
-          };
+              code: string;
+              public_id: string;
+              url: string;
+              created_at: string;
+              last_accessed_at: string | null;
+              total_clicks: number;
+              qr_scans: number;
+              expires_at: string | null;
+              message: string | null;
+            };
           break;
         } catch {
           if (customCode) {
@@ -299,7 +311,7 @@ class SqliteStorage implements StorageEngine {
   async getByCode(code: string): Promise<LinkRecord | null> {
     const row = this.db
       .prepare(
-        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE code = ?",
+        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at, message FROM links WHERE code = ?",
       )
       .get(code) as
       | {
@@ -311,6 +323,7 @@ class SqliteStorage implements StorageEngine {
           total_clicks: number;
           qr_scans: number;
           expires_at: string | null;
+          message: string | null;
         }
       | undefined;
     if (!row) {
@@ -337,7 +350,7 @@ class SqliteStorage implements StorageEngine {
 
     const row = this.db
       .prepare(
-        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at FROM links WHERE public_id = ?",
+        "SELECT code, public_id, url, created_at, last_accessed_at, total_clicks, qr_scans, expires_at, message FROM links WHERE public_id = ?",
       )
       .get(publicId) as
       | {
@@ -349,6 +362,7 @@ class SqliteStorage implements StorageEngine {
           total_clicks: number;
           qr_scans: number;
           expires_at: string | null;
+          message: string | null;
         }
       | undefined;
     if (!row) {
@@ -506,7 +520,8 @@ class RedisStorage implements StorageEngine {
     const publicId = randomUUID();
     const customCode = normalizeCustomCode(options.code);
     const expiresAt = normalizeExpiresAt(options.expiresAt);
-    const wantsDedicatedLink = customCode !== null || expiresAt !== null;
+    const message = options.message;
+    const wantsDedicatedLink = customCode !== null || expiresAt !== null || (message != null && message.length > 0);
 
     let code = wantsDedicatedLink ? null : await this.redis.get<string>(this.urlKey(url));
     if (code) {
@@ -545,6 +560,7 @@ class RedisStorage implements StorageEngine {
           totalClicks: "0",
           qrScans: "0",
           expiresAt: expiresAt ?? "",
+          message: message ?? "",
         });
         if (!wantsDedicatedLink) {
           await this.redis.set(this.urlKey(url), candidate);
@@ -597,6 +613,7 @@ class RedisStorage implements StorageEngine {
       totalClicks: Number(row.totalClicks ?? 0),
       qrScans: Number(row.qrScans ?? 0),
       expiresAt: row.expiresAt || null,
+      message: row.message || null,
     };
   }
 

@@ -95,7 +95,7 @@ export default async function ShortCodePage({
       <SiteHeader showHistoryLink={false} />
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-12 text-center">
         {/* The metadata above is used by crawlers and social previews; browsers redirect immediately. */}
-        <AutoRedirect targetUrl={link.url} lang={lang} />
+        <AutoRedirect targetUrl={link.url} message={link.message} lang={lang} />
       </main>
     </div>
   );

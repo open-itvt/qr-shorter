@@ -94,7 +94,8 @@ export async function POST(request: Request) {
     const url = normalizeUrl(body?.url);
     const customCode = typeof body?.customCode === "string" ? body.customCode : undefined;
     const expiresAt = typeof body?.expiresAt === "string" ? body.expiresAt : undefined;
-    const created = await storage.createShortLink(url, { code: customCode, expiresAt });
+    const message = typeof body?.message === "string" && body.message.trim().length > 0 ? body.message.trim() : null;
+    const created = await storage.createShortLink(url, { code: customCode, expiresAt, message });
     const baseUrl = await getBaseUrl();
 
     cleanupExpiredLinksLazy().catch((err) => console.error("Cleanup failed:", err));
@@ -108,6 +109,7 @@ export async function POST(request: Request) {
         qrUrl: `${baseUrl}/api/qr/${created.code}`,
         statsUrl: `${baseUrl}/stats/${created.publicId}`,
         expiresAt: created.expiresAt,
+        message: created.message,
         stats: {
           publicId: created.publicId,
           url: created.url,

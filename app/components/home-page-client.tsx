@@ -67,24 +67,27 @@ export default function HomePageClient() {
   const [error, setError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>("");
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") {
-      return "light";
-    }
-    const preferred =
-      localStorage.getItem("theme") ??
-      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    return preferred === "dark" ? "dark" : "light";
-  });
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [result, setResult] = useState<ApiResult | null>(null);
   const [stats, setStats] = useState<StatsResult | null>(null);
-  const [siteLang] = useState<"en" | "pl">(() => {
+  const [siteLang, setSiteLang] = useState<"en" | "pl">("en");
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("theme");
+      const preferred =
+        stored ??
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      setTheme(preferred === "dark" ? "dark" : "light");
+    } catch {}
+  }, []);
+
+  useEffect(() => {
     try {
       const stored = localStorage.getItem("site-language");
-      if (stored === "pl" || stored === "en") return stored as "pl" | "en";
+      if (stored === "pl" || stored === "en") setSiteLang(stored);
     } catch {}
-    return "en";
-  });
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
