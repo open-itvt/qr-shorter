@@ -17,7 +17,7 @@ export default function AutoRedirect({ targetUrl, message, delaySeconds = 5, lan
   const [cancelled, setCancelled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const announcerRef = useRef<HTMLDivElement | null>(null);
-  const shouldShowPage = notificationsEnabled && message;
+  const shouldShowPage = notificationsEnabled;
 
   const copy = {
     title: lang === "pl" ? "Przekierowanie" : "Redirecting",
