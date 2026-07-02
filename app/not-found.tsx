@@ -11,33 +11,22 @@ export default async function NotFound() {
     title: lang === "pl" ? "404 — Strona nie znaleziona" : "404 — Page Not Found",
     heading: lang === "pl" ? "Nie znaleziono strony" : "Page Not Found",
     description: lang === "pl" ? "Link, który próbujesz otworzyć, jest nieprawidłowy, wygasł lub został usunięty." : "The link you are trying to open is invalid, has expired, or has been removed.",
-    action: lang === "pl" ? "Utwórz nowy skrócony link" : "Create a new short link",
-    home: lang === "pl" ? "Strona główna" : "Home",
+    back: lang === "pl" ? "Powrót do strony głównej" : "Back to home",
   };
 
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader showHistoryLink={false} />
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-        <div className="space-y-4 rounded-3xl border border-slate-200 bg-surface p-6 shadow-sm dark:border-slate-700">
-          <h1 className="text-6xl font-extrabold text-primary sm:text-7xl">404</h1>
-          <p className="text-lg font-semibold text-muted">{copy.heading}</p>
-          <p className="text-base text-muted">{copy.description}</p>
-          <div className="flex items-center justify-center gap-3 pt-2">
-            <Link
-              href="/"
-              className="min-h-11 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              {copy.action}
-            </Link>
-            <Link
-              href="/"
-              className="min-h-11 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              {copy.home}
-            </Link>
-          </div>
-        </div>
+        <h1 className="text-8xl font-extrabold text-primary sm:text-9xl">404</h1>
+        <p className="mt-4 text-lg font-semibold text-muted">{copy.heading}</p>
+        <p className="mt-2 text-base text-muted">{copy.description}</p>
+        <Link
+          href="/"
+          className="mt-8 min-h-11 rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          {copy.back}
+        </Link>
       </main>
     </div>
   );
